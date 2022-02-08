@@ -146,33 +146,25 @@ public class TrackerApp {
         }
     }
 
+
     // EFFECTS: returns the menu messages after adding an item
-    @SuppressWarnings("methodlength")
     private void returnAddStatement(String choice, String name) {
-        switch (choice) {
-            case "sun":
-                System.out.println(name + " has been added to Sunday");
-                break;
-            case "mon":
-                System.out.println(name + " has been added to Monday");
-                break;
-            case "tue":
-                System.out.println(name + " has been added to Tuesday");
-                break;
-            case "wed":
-                System.out.println(name + " has been added to Wednesday");
-                break;
-            case "thu":
-                System.out.println(name + " has been added to Thursday");
-                break;
-            case "fri":
-                System.out.println(name + " has been added to Friday");
-                break;
-            case "sat":
-                System.out.println(name + " has been added to Saturday");
-                break;
-            default:
-                System.out.println("Invalid input. Please try again.");
+        if (choice.equals("sun")) {
+            System.out.println(name + " has been added to Sunday");
+        } else if (choice.equals("mon")) {
+            System.out.println(name + " has been added to Monday");
+        } else if (choice.equals("tue")) {
+            System.out.println(name + " has been added to Tuesday");
+        } else if (choice.equals("wed")) {
+            System.out.println(name + " has been added to Wednesday");
+        } else if (choice.equals("thu")) {
+            System.out.println(name + " has been added to Thursday");
+        } else if (choice.equals("fri")) {
+            System.out.println(name + " has been added to Friday");
+        } else if (choice.equals("sat")) {
+            System.out.println(name + " has been added to Saturday");
+        } else {
+            System.out.println("Invalid input. Please try again.");
         }
     }
 
@@ -183,7 +175,7 @@ public class TrackerApp {
         String name = input.next();
         System.out.println("\nRemove from:");
         String day = pickDay();
-        if (exitsIn(day, name)) {
+        if (existsIn(day, name)) {
             removeFrom(day, name);
             returnRemoveStatement(day, name);
         } else {
@@ -191,31 +183,22 @@ public class TrackerApp {
         }
     }
 
-    @SuppressWarnings("methodlength")
-    private boolean exitsIn(String choice, String name) {
+    private boolean existsIn(String choice, String name) {
         boolean exists = false;
-        switch (choice) {
-            case "sun":
-                exists = thisWeek.getSunday().containsKey(name);
-                break;
-            case "mon":
-                exists = thisWeek.getMonday().containsKey(name);
-                break;
-            case "tue":
-                exists = thisWeek.getTuesday().containsKey(name);
-                break;
-            case "wed":
-                exists = thisWeek.getWednesday().containsKey(name);
-                break;
-            case "thu":
-                exists = thisWeek.getThursday().containsKey(name);
-                break;
-            case "fri":
-                exists = thisWeek.getFriday().containsKey(name);
-                break;
-            case "sat":
-                exists = thisWeek.getSaturday().containsKey(name);
-                break;
+        if (choice.equals("sun")) {
+            exists = thisWeek.getSunday().containsKey(name);
+        } else if (choice.equals("mon")) {
+            exists = thisWeek.getMonday().containsKey(name);
+        } else if (choice.equals("tue")) {
+            exists = thisWeek.getTuesday().containsKey(name);
+        } else if (choice.equals("wed")) {
+            exists = thisWeek.getWednesday().containsKey(name);
+        } else if (choice.equals("thu")) {
+            exists = thisWeek.getThursday().containsKey(name);
+        } else if (choice.equals("fri")) {
+            exists = thisWeek.getFriday().containsKey(name);
+        } else if (choice.equals("sat")) {
+            exists = thisWeek.getSaturday().containsKey(name);
         }
         return exists;
     }
@@ -250,32 +233,23 @@ public class TrackerApp {
 
     // MODIFIES: this
     // EFFECTS: returns the menu messages after removing an item
-    @SuppressWarnings("methodlength")
     private void returnRemoveStatement(String choice, String name) {
-        switch (choice) {
-            case "sun":
-                System.out.println(name + " has been removed from Sunday");
-                break;
-            case "mon":
-                System.out.println(name + " has been removed from Monday");
-                break;
-            case "tue":
-                System.out.println(name + " has been removed from Tuesday");
-                break;
-            case "wed":
-                System.out.println(name + " has been removed from Wednesday");
-                break;
-            case "thu":
-                System.out.println(name + " has been removed from Thursday");
-                break;
-            case "fri":
-                System.out.println(name + " has been removed from Friday");
-                break;
-            case "sat":
-                System.out.println(name + " has been removed from Saturday");
-                break;
-            default:
-                System.out.println("Invalid input. Please try again.");
+        if (choice.equals("sun")) {
+            System.out.println(name + " has been removed from Sunday");
+        } else if (choice.equals("mon")) {
+            System.out.println(name + " has been removed from Monday");
+        } else if (choice.equals("tue")) {
+            System.out.println(name + " has been removed from Tuesday");
+        } else if (choice.equals("wed")) {
+            System.out.println(name + " has been removed from Wednesday");
+        } else if (choice.equals("thu")) {
+            System.out.println(name + " has been removed from Thursday");
+        } else if (choice.equals("fri")) {
+            System.out.println(name + " has been removed from Friday");
+        } else if (choice.equals("sat")) {
+            System.out.println(name + " has been removed from Saturday");
+        } else {
+            System.out.println("Invalid input. Please try again.");
         }
     }
 
@@ -299,7 +273,6 @@ public class TrackerApp {
         thisWeek.setTargetTotal(target);
         System.out.println("Target has been set to the indicated amount.");
     }
-
 
 
     // MODIFIES: this

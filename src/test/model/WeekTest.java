@@ -53,7 +53,6 @@ class WeekTest {
     }
 
 
-
     @Test
     void testAddMonday() {
         myWeek.addMonday("advil");
