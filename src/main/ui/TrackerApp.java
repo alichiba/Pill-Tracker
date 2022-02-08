@@ -52,7 +52,8 @@ public class TrackerApp {
         System.out.println("\tv -> view week");
         System.out.println("\ta -> add item");
         System.out.println("\tr -> remove item");
-        System.out.println("\tn -> new week");
+        System.out.println("\tt -> set a target amount");
+        System.out.println("\tn -> start a new week");
         System.out.println("\te -> exit");
     }
 
@@ -65,6 +66,8 @@ public class TrackerApp {
             addItem();
         } else if (command.equals("r")) {
             removeItem();
+        } else if (command.equals("t")) {
+            setTotal();
         } else if (command.equals("n")) {
             nextWeek();
         } else {
@@ -83,7 +86,9 @@ public class TrackerApp {
         viewFriday();
         viewSaturday();
         System.out.println("\nWeekly Total: " + thisWeek.getWeeklyConsumption());
-        System.out.println("\nLast Weeks Total: " + thisWeek.getLastWeek());
+        System.out.println("Target Total: " + thisWeek.getTargetTotal());
+        System.out.println(thisWeek.targetReached());
+        System.out.println("Last Weeks Total: " + thisWeek.getLastWeek());
     }
 
     // MODIFIES: this
@@ -178,8 +183,41 @@ public class TrackerApp {
         String name = input.next();
         System.out.println("\nRemove from:");
         String day = pickDay();
-        removeFrom(day, name);
-        returnRemoveStatement(day, name);
+        if (exitsIn(day, name)) {
+            removeFrom(day, name);
+            returnRemoveStatement(day, name);
+        } else {
+            System.out.println("Item not found in specified day.");
+        }
+    }
+
+    @SuppressWarnings("methodlength")
+    private boolean exitsIn(String choice, String name) {
+        boolean exists = false;
+        switch (choice) {
+            case "sun":
+                exists = thisWeek.getSunday().containsKey(name);
+                break;
+            case "mon":
+                exists = thisWeek.getMonday().containsKey(name);
+                break;
+            case "tue":
+                exists = thisWeek.getTuesday().containsKey(name);
+                break;
+            case "wed":
+                exists = thisWeek.getWednesday().containsKey(name);
+                break;
+            case "thu":
+                exists = thisWeek.getThursday().containsKey(name);
+                break;
+            case "fri":
+                exists = thisWeek.getFriday().containsKey(name);
+                break;
+            case "sat":
+                exists = thisWeek.getSaturday().containsKey(name);
+                break;
+        }
+        return exists;
     }
 
     // MODIFIES: this
@@ -245,9 +283,23 @@ public class TrackerApp {
     // EFFECTS: creates a new week with the current week's consumption stored as last week
     private void nextWeek() {
         int savedWeek = thisWeek.getWeeklyConsumption();
+        int savedTarget = thisWeek.getTargetTotal();
         thisWeek = new Week();
         thisWeek.updateLastWeek(savedWeek);
+        thisWeek.setTargetTotal(savedTarget);
+        System.out.println("The next week has been started.");
     }
+
+    // MODIFIES: this
+    // EFFECTS: displays menu to set target total and sets input as the target
+    private void setTotal() {
+        int target;
+        System.out.println("Enter an amount for the target total:");
+        target = input.nextInt();
+        thisWeek.setTargetTotal(target);
+        System.out.println("Target has been set to the indicated amount.");
+    }
+
 
 
     // MODIFIES: this

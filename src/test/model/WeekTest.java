@@ -49,6 +49,7 @@ class WeekTest {
         assertFalse(myWeek.getSunday().containsKey("paracetamol"));
         assertEquals(0, myWeek.getSunday().size());
         assertEquals(0, myWeek.getWeeklyConsumption());
+
     }
 
 
@@ -204,5 +205,27 @@ class WeekTest {
     void testUpdateLastWeek() {
         myWeek.updateLastWeek(10);
         assertEquals(10, myWeek.getLastWeek());
+    }
+
+    @Test
+    void testSetTargetTotal() {
+        myWeek.setTargetTotal(10);
+        assertEquals(10, myWeek.getTargetTotal());
+    }
+
+    @Test
+    void testTargetReached() {
+        myWeek.setTargetTotal(2);
+        assertTrue(myWeek.getWeeklyConsumption() < myWeek.getTargetTotal());
+        assertEquals("The weekly consumption is below the target total", myWeek.targetReached());
+
+        myWeek.addSaturday("meth");
+        myWeek.addFriday("opium");
+        assertEquals(myWeek.getWeeklyConsumption(), myWeek.getTargetTotal());
+        assertEquals("The target total has been reached", myWeek.targetReached());
+
+        myWeek.addWednesday("aspirin");
+        assertTrue(myWeek.getWeeklyConsumption() > myWeek.getTargetTotal());
+        assertEquals("The weekly consumption is above the target total", myWeek.targetReached());
     }
 }

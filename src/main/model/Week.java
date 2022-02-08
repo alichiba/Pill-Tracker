@@ -4,15 +4,16 @@ import java.util.HashMap;
 
 // Represents a week with 7 days, the total weekly consumption, and last week's consumption
 public class Week {
-    private HashMap<String, Pill> sunday;
-    private HashMap<String, Pill> monday;
-    private HashMap<String, Pill> tuesday;
-    private HashMap<String, Pill> wednesday;
-    private HashMap<String, Pill> thursday;
-    private HashMap<String, Pill> friday;
-    private HashMap<String, Pill> saturday;
+    private final HashMap<String, Pill> sunday;
+    private final HashMap<String, Pill> monday;
+    private final HashMap<String, Pill> tuesday;
+    private final HashMap<String, Pill> wednesday;
+    private final HashMap<String, Pill> thursday;
+    private final HashMap<String, Pill> friday;
+    private final HashMap<String, Pill> saturday;
     private int weeklyConsumption;
     private int lastWeek;
+    private int targetTotal;
 
     // EFFECTS: creates new Week with no items, and 0 for totals
     public Week() {
@@ -25,6 +26,7 @@ public class Week {
         this.saturday = new HashMap<>();
         this.weeklyConsumption = 0;
         this.lastWeek = 0;
+        this.targetTotal = 0;
     }
 
     //SUNDAY METHODS
@@ -36,6 +38,7 @@ public class Week {
         sunday.put(name, myPill);
         weeklyConsumption++;
     }
+
 
     // REQUIRES: hashmap should not be empty when called
     // MODIFIES: this
@@ -185,6 +188,29 @@ public class Week {
     // EFFECTS: inputs the given integer as the value for lastWeek
     public void updateLastWeek(int total) {
         lastWeek = total;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets a value as the target total for a week
+    public void setTargetTotal(int target) {
+        targetTotal = target;
+    }
+
+    // EFFECTS: returns message indicating whether consumption is above, below or equal to the target
+    public String targetReached() {
+        String result;
+        if (targetTotal == weeklyConsumption) {
+            result = "The target total has been reached";
+        } else if (targetTotal > weeklyConsumption) {
+            result = "The weekly consumption is below the target total";
+        } else {
+            result = "The weekly consumption is above the target total";
+        }
+        return result;
+    }
+
+    public int getTargetTotal() {
+        return targetTotal;
     }
 
     public int getWeeklyConsumption() {

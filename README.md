@@ -24,12 +24,7 @@ for that would help people form healthy habits.
 ## User Stories:
 - As a user I want to be able to **add** a pill to the history of medications taken in a day
 - As a user I want to be able to **remove** an individual pill from the history of medications
-- As a user I want to be able to **see** a summary of the number of pills taken for the week and the last week
+- As a user I want to be able to **see** a summary of the number of pills for this week, last week, and the target
 - As a user I want to be able to **see** a visualization of the pills taken each day in a week
 - As a user I want to be able to manually move to the next week
-
-
-/// notes: make a hashmap for the days in a week, and for the remove function
-//         search by key? ie key for sunday, monday, etc
-// add more categories for the pill class
-// more game-like in the future? reward system/animation/including specific features for exercise, water etc.
+- As a user I want to be able to set a target amount for a week
