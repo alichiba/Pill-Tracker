@@ -1,6 +1,5 @@
 package persistence;
 
-import model.Pill;
 import model.Week;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,10 +8,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Stream;
 
+
+// Represents a reader that creates a Week from JSON data stored in file
 public class JsonReader {
     private String source;
 
@@ -21,7 +20,7 @@ public class JsonReader {
         this.source = source;
     }
 
-    // EFFECTS: reads workroom from file and returns it;
+    // EFFECTS: reads week from file and returns it;
     // throws IOException if an error occurs reading data from file
     public Week read() throws IOException {
         String jsonData = readFile(source);
@@ -49,6 +48,8 @@ public class JsonReader {
         return w;
     }
 
+    // MODIFIES: w
+    // EFFECTS: reads saved values for int totals and updates the week item
     private void addTotals(Week w, JSONObject savedJsonObject) {
         int weeklyConsumption = savedJsonObject.optInt("weeklyConsumption");
         int lastWeek = savedJsonObject.optInt("lastWeek");
@@ -59,8 +60,8 @@ public class JsonReader {
         w.setTargetTotal(targetTotal);
     }
 
-    // MODIFIES:
-    // EFFECTS: parses thingies from JSON object and adds them to workroom
+    // MODIFIES: w
+    // EFFECTS: parses days/JSONArrays from JSON object and adds them to workroom
     private void addDay(Week w, JSONObject savedJsonObject) {
         JSONArray newSunArray = savedJsonObject.getJSONArray("sunday");
         JSONArray newMonArray = savedJsonObject.getJSONArray("monday");
@@ -78,6 +79,8 @@ public class JsonReader {
         addSaturday(w, newSatArray);
     }
 
+    // MODIFIES: w
+    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Sunday of given week
     private void addSunday(Week w, JSONArray newArray) {
         for (Object json : newArray) {
             JSONObject nextJson = (JSONObject) json;
@@ -86,6 +89,8 @@ public class JsonReader {
         }
     }
 
+    // MODIFIES: w
+    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Monday of given week
     private void addMonday(Week w, JSONArray newArray) {
         for (Object json : newArray) {
             JSONObject nextJson = (JSONObject) json;
@@ -94,6 +99,8 @@ public class JsonReader {
         }
     }
 
+    // MODIFIES: w
+    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Tuesday of given week
     private void addTuesday(Week w, JSONArray newArray) {
         for (Object json : newArray) {
             JSONObject nextJson = (JSONObject) json;
@@ -102,6 +109,8 @@ public class JsonReader {
         }
     }
 
+    // MODIFIES: w
+    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Wednesday of given week
     private void addWednesday(Week w, JSONArray newArray) {
         for (Object json : newArray) {
             JSONObject nextJson = (JSONObject) json;
@@ -110,6 +119,8 @@ public class JsonReader {
         }
     }
 
+    // MODIFIES: w
+    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Thursday of given week
     private void addThursday(Week w, JSONArray newArray) {
         for (Object json : newArray) {
             JSONObject nextJson = (JSONObject) json;
@@ -118,6 +129,8 @@ public class JsonReader {
         }
     }
 
+    // MODIFIES: w
+    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Friday of given week
     private void addFriday(Week w, JSONArray newArray) {
         for (Object json : newArray) {
             JSONObject nextJson = (JSONObject) json;
@@ -126,6 +139,8 @@ public class JsonReader {
         }
     }
 
+    // MODIFIES: w
+    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Saturday of given week
     private void addSaturday(Week w, JSONArray newArray) {
         for (Object json : newArray) {
             JSONObject nextJson = (JSONObject) json;

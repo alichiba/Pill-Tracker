@@ -11,7 +11,8 @@ water, or exercise despite the fact that the primary design and intention is for
 medications. As such, anyone could use the application, but it will likely be most useful
 to people who have medications that they have to take on a regular basis, whether that
 be seniors who choose to take vitamin supplements, women on birth control or even 
-people who frequently have to take pain-killers.
+people who frequently have to take pain-killers. Some aspects of code were sourced from the 
+demos provided by the CPSC210 course.
 
 
 This project is of interest to me because I think that many people could
@@ -29,5 +30,5 @@ to log behaviour would help people form healthy habits or improve on unhealthy o
 - As a user I want to be able to manually **move** to the next week
 - As a user I want to be able to **set** a target amount for a week
 
-- As a user, I want to be able to save my current tracker state to file
-- As a user, I want to be able to load my current tracker state from file 
+- As a user, I want to be able to **save** my current tracker state to file
+- As a user, I want to be able to **load** my saved tracker state from file 

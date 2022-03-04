@@ -3,11 +3,10 @@ package persistence;
 import model.Week;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-// Represents a writer that writes JSON representation of week to file
+// Represents a writer that writes JSON representation of week to desired file
 public class JsonWriter {
     private PrintWriter writer;
     private String destination;
@@ -25,7 +24,7 @@ public class JsonWriter {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
+    // EFFECTS: writes JSON representation of week to file
     public void write(Week w) {
         JSONObject json = w.toJson();
         saveToFile(json.toString());

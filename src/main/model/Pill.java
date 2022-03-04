@@ -15,6 +15,7 @@ public class Pill {
         return name;
     }
 
+    // EFFECTS: returns a json object constructed from a Pill
     public JSONObject toJson() {
         JSONObject jsonPill = new JSONObject();
         jsonPill.put("name", name);

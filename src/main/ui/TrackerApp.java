@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-// Pill Tracker Application
+// Pill Tracker Application console user interface
 public class TrackerApp {
     private static final String JSON_STORE = "./data/yourWeek.json";
     private Week thisWeek;
@@ -64,8 +64,8 @@ public class TrackerApp {
         System.out.println("\tr -> remove item");
         System.out.println("\tt -> set a target amount");
         System.out.println("\tn -> start a new week");
-        System.out.println("\ts -> save work room to file");
-        System.out.println("\tl -> load work room from file");
+        System.out.println("\ts -> save week to file");
+        System.out.println("\tl -> load week from file");
         System.out.println("\te -> exit");
     }
 
@@ -135,7 +135,7 @@ public class TrackerApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: Adds an item to a day depending on the given input
+    // EFFECTS: adds an item to a day depending on the given input
     private void addTo(String choice, String name) {
         switch (choice) {
             case "sun":
@@ -398,13 +398,13 @@ public class TrackerApp {
     }
 
 
-    // EFFECTS: saves the workroom to file
+    // EFFECTS: saves the week to destination file
     private void saveWeek() {
         try {
             jsonWriter.open();
             jsonWriter.write(thisWeek);
             jsonWriter.close();
-            System.out.println("Saved " + thisWeek.getName() + " to " + JSON_STORE);
+            System.out.println("Successfully saved " + thisWeek.getName() + " to " + JSON_STORE);
         } catch (FileNotFoundException e) {
             System.out.println("Unable to write to file: " + JSON_STORE);
         }
@@ -415,7 +415,7 @@ public class TrackerApp {
     private void loadWeek() {
         try {
             thisWeek = jsonReader.read();
-            System.out.println("Loaded " + thisWeek.getName() + " from " + JSON_STORE);
+            System.out.println("Successfully loaded " + thisWeek.getName() + " from " + JSON_STORE);
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }

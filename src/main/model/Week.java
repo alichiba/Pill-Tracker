@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-// Represents a week with 7 days, the total weekly consumption, and last week's consumption
+// Represents a week with 7 days, the total weekly consumption, last week's consumption, and a target
 public class Week {
     private final HashMap<String, Pill> sunday;
     private final HashMap<String, Pill> monday;
@@ -18,9 +18,9 @@ public class Week {
     private int weeklyConsumption;
     private int lastWeek;
     private int targetTotal;
-    private String name;
+    private final String name;
 
-    // EFFECTS: creates new Week with no items, and 0 for totals
+    // EFFECTS: creates new Week with name, no items, and 0 for totals
     public Week(String name) {
         this.sunday = new HashMap<>();
         this.monday = new HashMap<>();
@@ -190,7 +190,8 @@ public class Week {
         return saturday;
     }
 
-    // !!!
+    // MODIFIES: this
+    // EFFECTS: manually inputs total as the value for WeeklyConsumption
     public void updateWeeklyConsumption(int total) {
         weeklyConsumption = total;
     }
@@ -237,7 +238,7 @@ public class Week {
         return name;
     }
 
-    //!!!
+    // EFFECTS: makes a JSONObject with keys and values for all aspects of the Week
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("sunday", pillsToJson(sunday));
@@ -254,7 +255,7 @@ public class Week {
         return json;
     }
 
-    //!!!
+    // EFFECTS: creates a JSONArray from the hashmap for a given day
     public JSONArray pillsToJson(HashMap<String, Pill> weekDay) {
         JSONArray jsonWeekDay = new JSONArray();
         for (Map.Entry<String, Pill> set : weekDay.entrySet()) {
