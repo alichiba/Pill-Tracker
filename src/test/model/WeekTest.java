@@ -228,4 +228,61 @@ class WeekTest {
         assertTrue(myWeek.getWeeklyConsumption() > myWeek.getTargetTotal());
         assertEquals("The weekly consumption is above the target total", myWeek.targetReached());
     }
+
+    @Test
+    void testToJsonEmptyWeek() {
+        assertTrue(myWeek.toJson().has("sunday"));
+        assertTrue(myWeek.toJson().has("monday"));
+        assertTrue(myWeek.toJson().has("tuesday"));
+        assertTrue(myWeek.toJson().has("wednesday"));
+        assertTrue(myWeek.toJson().has("thursday"));
+        assertTrue(myWeek.toJson().has("friday"));
+        assertTrue(myWeek.toJson().has("saturday"));
+        assertTrue(myWeek.toJson().has("weeklyConsumption"));
+        assertTrue(myWeek.toJson().has("lastWeek"));
+        assertTrue(myWeek.toJson().has("targetTotal"));
+        assertTrue(myWeek.toJson().has("name"));
+        assertEquals("new week", myWeek.toJson().getString("name"));
+        assertEquals(0, myWeek.toJson().optInt("weeklyConsumption"));
+        assertEquals(0, myWeek.toJson().optInt("lastWeek"));
+        assertEquals(0, myWeek.toJson().getInt("targetTotal"));
+        assertTrue(myWeek.toJson().optJSONArray("sunday").isEmpty());
+        assertTrue(myWeek.toJson().optJSONArray("monday").isEmpty());
+        assertTrue(myWeek.toJson().optJSONArray("tuesday").isEmpty());
+        assertTrue(myWeek.toJson().optJSONArray("wednesday").isEmpty());
+        assertTrue(myWeek.toJson().optJSONArray("thursday").isEmpty());
+        assertTrue(myWeek.toJson().optJSONArray("friday").isEmpty());
+        assertTrue(myWeek.toJson().optJSONArray("saturday").isEmpty());
+    }
+
+    @Test
+    void testToJsonWithPills() {
+        myWeek.addSunday("tylenol");
+        myWeek.addMonday("tylenol");
+        myWeek.addTuesday("tylenol");
+        myWeek.addWednesday("tylenol");
+        myWeek.addThursday("tylenol");
+        myWeek.addFriday("tylenol");
+        myWeek.addSaturday("tylenol");
+
+        assertEquals("new week", myWeek.toJson().getString("name"));
+        assertEquals(7, myWeek.toJson().optInt("weeklyConsumption"));
+        assertEquals(0, myWeek.toJson().optInt("lastWeek"));
+        assertEquals(0, myWeek.toJson().getInt("targetTotal"));
+
+        assertEquals(1, myWeek.toJson().optJSONArray("sunday").length());
+        assertEquals(1, myWeek.toJson().optJSONArray("monday").length());
+        assertEquals(1, myWeek.toJson().optJSONArray("tuesday").length());
+        assertEquals(1, myWeek.toJson().optJSONArray("wednesday").length());
+        assertEquals(1, myWeek.toJson().optJSONArray("thursday").length());
+        assertEquals(1, myWeek.toJson().optJSONArray("friday").length());
+        assertEquals(1, myWeek.toJson().optJSONArray("saturday").length());
+    }
+
+    @Test
+    void testPillsToJson() {
+        assertTrue(myWeek.pillsToJson(myWeek.getSunday()).isEmpty());
+        myWeek.addSunday("advil");
+        assertEquals(1, myWeek.pillsToJson(myWeek.getSunday()).length());
+    }
 }

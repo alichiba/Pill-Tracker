@@ -1,0 +1,41 @@
+{
+  "sunday": [
+    {
+      "name": "advil"
+    }
+  ],
+  "monday": [
+    {
+      "name": "advil"
+    }
+  ],
+  "tuesday": [
+    {
+      "name": "advil"
+    }
+  ],
+  "wednesday": [
+    {
+      "name": "marijuana"
+    }
+  ],
+  "thursday": [
+    {
+      "name": "advil"
+    }
+  ],
+  "friday": [
+    {
+      "name": "advil"
+    }
+  ],
+  "saturday": [
+    {
+      "name": "advil"
+    }
+  ],
+  "name": "Your Weekly Tracker",
+  "weeklyConsumption": 7,
+  "lastWeek": 1,
+  "targetTotal": 3
+}
