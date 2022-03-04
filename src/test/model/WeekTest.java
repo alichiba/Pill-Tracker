@@ -12,7 +12,7 @@ class WeekTest {
 
     @BeforeEach
     void runBefore() {
-        myWeek = new Week();
+        myWeek = new Week("new week");
     }
 
     @Test

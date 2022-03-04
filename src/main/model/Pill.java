@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 // Represents a pill or object that is being tracked
 public class Pill {
     private final String name;
@@ -11,5 +13,11 @@ public class Pill {
 
     public String getName() {
         return name;
+    }
+
+    public JSONObject toJson() {
+        JSONObject jsonPill = new JSONObject();
+        jsonPill.put("name", name);
+        return jsonPill;
     }
 }

@@ -28,3 +28,6 @@ to log behaviour would help people form healthy habits or improve on unhealthy o
 - As a user I want to be able to **see** a visualization of the pills taken each day in a week
 - As a user I want to be able to manually **move** to the next week
 - As a user I want to be able to **set** a target amount for a week
+
+- As a user, I want to be able to save my current tracker state to file
+- As a user, I want to be able to load my current tracker state from file 

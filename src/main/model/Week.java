@@ -1,6 +1,10 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Map;
 
 // Represents a week with 7 days, the total weekly consumption, and last week's consumption
 public class Week {
@@ -14,9 +18,10 @@ public class Week {
     private int weeklyConsumption;
     private int lastWeek;
     private int targetTotal;
+    private String name;
 
     // EFFECTS: creates new Week with no items, and 0 for totals
-    public Week() {
+    public Week(String name) {
         this.sunday = new HashMap<>();
         this.monday = new HashMap<>();
         this.tuesday = new HashMap<>();
@@ -27,6 +32,7 @@ public class Week {
         this.weeklyConsumption = 0;
         this.lastWeek = 0;
         this.targetTotal = 0;
+        this.name = name;
     }
 
     //SUNDAY METHODS
@@ -184,6 +190,12 @@ public class Week {
         return saturday;
     }
 
+    // !!!
+    public void updateWeeklyConsumption(int total) {
+        weeklyConsumption = total;
+    }
+
+
     // MODIFIES: this
     // EFFECTS: inputs the given integer as the value for lastWeek
     public void updateLastWeek(int total) {
@@ -219,5 +231,36 @@ public class Week {
 
     public int getLastWeek() {
         return lastWeek;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    //!!!
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("sunday", pillsToJson(sunday));
+        json.put("monday", pillsToJson(monday));
+        json.put("tuesday", pillsToJson(tuesday));
+        json.put("wednesday", pillsToJson(wednesday));
+        json.put("thursday", pillsToJson(thursday));
+        json.put("friday", pillsToJson(friday));
+        json.put("saturday", pillsToJson(saturday));
+        json.put("weeklyConsumption", weeklyConsumption);
+        json.put("lastWeek", lastWeek);
+        json.put("targetTotal", targetTotal);
+        json.put("name", name);
+        return json;
+    }
+
+    //!!!
+    public JSONArray pillsToJson(HashMap<String, Pill> weekDay) {
+        JSONArray jsonWeekDay = new JSONArray();
+        for (Map.Entry<String, Pill> set : weekDay.entrySet()) {
+            jsonWeekDay.put(set.getValue().toJson());
+        }
+
+        return jsonWeekDay;
     }
 }

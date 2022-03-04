@@ -2,17 +2,28 @@ package ui;
 
 import model.Pill;
 import model.Week;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
 // Pill Tracker Application
 public class TrackerApp {
+    private static final String JSON_STORE = "./data/yourWeek.json";
     private Week thisWeek;
     private Scanner input;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // EFFECTS: runs the tracker application
     public TrackerApp() {
+        input = new Scanner(System.in);
+        thisWeek = new Week("Your Weekly Tracker");
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runTracker();
     }
 
@@ -26,8 +37,7 @@ public class TrackerApp {
 
         while (keepGoing) {
             displayMenu();
-            command = input.next();
-            command = command.toLowerCase();
+            command = input.next().toLowerCase();
 
             if (command.equals("e")) {
                 keepGoing = false;
@@ -42,7 +52,7 @@ public class TrackerApp {
     // MODIFIES: this
     // EFFECTS: initializes the week
     public void startUp() {
-        thisWeek = new Week();
+        thisWeek = new Week("Your Weekly Tracker");
         input = new Scanner(System.in);
     }
 
@@ -54,6 +64,8 @@ public class TrackerApp {
         System.out.println("\tr -> remove item");
         System.out.println("\tt -> set a target amount");
         System.out.println("\tn -> start a new week");
+        System.out.println("\ts -> save work room to file");
+        System.out.println("\tl -> load work room from file");
         System.out.println("\te -> exit");
     }
 
@@ -70,6 +82,10 @@ public class TrackerApp {
             setTotal();
         } else if (command.equals("n")) {
             nextWeek();
+        } else if (command.equals("s")) {
+            saveWeek();
+        } else if (command.equals("l")) {
+            loadWeek();
         } else {
             System.out.println("Invalid Selection...");
         }
@@ -183,6 +199,7 @@ public class TrackerApp {
         }
     }
 
+    // EFFECTS: looks to see if a given name exists in the given day of the week
     private boolean existsIn(String choice, String name) {
         boolean exists = false;
         if (choice.equals("sun")) {
@@ -258,7 +275,7 @@ public class TrackerApp {
     private void nextWeek() {
         int savedWeek = thisWeek.getWeeklyConsumption();
         int savedTarget = thisWeek.getTargetTotal();
-        thisWeek = new Week();
+        thisWeek = new Week("Your Weekly Tracker");
         thisWeek.updateLastWeek(savedWeek);
         thisWeek.setTargetTotal(savedTarget);
         System.out.println("The next week has been started.");
@@ -380,4 +397,27 @@ public class TrackerApp {
         }
     }
 
+
+    // EFFECTS: saves the workroom to file
+    private void saveWeek() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(thisWeek);
+            jsonWriter.close();
+            System.out.println("Saved " + thisWeek.getName() + " to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads workroom from file
+    private void loadWeek() {
+        try {
+            thisWeek = jsonReader.read();
+            System.out.println("Loaded " + thisWeek.getName() + " from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
 }
