@@ -1,12 +1,5 @@
 {
-  "sunday": [
-    {
-      "name": "pill2"
-    },
-    {
-      "name": "pill1"
-    }
-  ],
+  "sunday": [],
   "targetTotal": 0,
   "saturday": [],
   "tuesday": [],
@@ -14,7 +7,7 @@
   "wednesday": [],
   "thursday": [],
   "friday": [],
-  "weeklyConsumption": 2,
+  "weeklyConsumption": 0,
   "lastWeek": 0,
   "monday": []
 }

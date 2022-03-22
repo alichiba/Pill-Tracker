@@ -8,6 +8,7 @@ import javax.swing.event.*;
 /* ListDemo.java requires no other files. */
 public class ListDemo extends JPanel implements ListSelectionListener {
     private JList sunday;
+    private JList monday;
     private DefaultListModel listModel;
 
     private static final String hireString = "Add";
@@ -28,6 +29,7 @@ public class ListDemo extends JPanel implements ListSelectionListener {
         sunday.addListSelectionListener(this);
         sunday.setVisibleRowCount(5);
         JScrollPane listScrollPane = new JScrollPane(sunday);
+        createMonday();
 
         hireButton = new JButton(hireString);
         HireListener hireListener = new HireListener(hireButton);
@@ -61,6 +63,14 @@ public class ListDemo extends JPanel implements ListSelectionListener {
 
         add(listScrollPane, BorderLayout.CENTER);
         add(buttonPane, BorderLayout.PAGE_END);
+    }
+
+    public void createMonday() {
+        monday = new JList(listModel);
+        monday.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        monday.setSelectedIndex(0);
+        monday.addListSelectionListener(this);
+        monday.setVisibleRowCount(5);
     }
 
     class FireListener implements ActionListener {
