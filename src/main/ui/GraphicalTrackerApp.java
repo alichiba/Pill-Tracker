@@ -1,6 +1,5 @@
 package ui;
 
-import model.Pill;
 import model.Week;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -9,52 +8,36 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Scanner;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 // basic code sourced from https://stackoverflow.com/questions/42867271/displaying-multiple-jlist-to-jframe
-public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemListener {
+public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemListener, ListSelectionListener {
     private Week thisWeek;
     private static final String JSON_STORE = "./data/yourWeek.json";
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
     private static final String[] WEEK_DAYS = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
             "Saturday"};
+    private JFrame frame;
+    private Container contentPane;
+    private JList<String> sunday;
+    private DefaultListModel<String> sundayListModel;
+    private JButton addButton;
+    private JTextField textField;
 
     public GraphicalTrackerApp() {
         startUp();
-    }
-
-    public Container createContentPane() {
         setLayout(new GridLayout(0, 7));
         createDaysOfWeek();
+        createRemoveButton();
+        createAddPanel();
         createTotals();
-        createButtonPanel();
-        return this;
-    }
-
-    private void createDaysOfWeek() {
-        for (int i = 0; i < WEEK_DAYS.length; i++) {
-            // new model for each week
-            DefaultListModel<String> listModel = new DefaultListModel<>();
-            for (String s : thisWeek.getSunday().keySet()) {
-                // fill the model with elements of Sunday!!!
-                listModel.addElement(s);
-            }
-            // new list for each day of the week with model
-            JList<String> list = new JList<>(listModel);
-            list.setVisibleRowCount(4);
-            JScrollPane scrollPane = new JScrollPane(list);
-            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-            // border around showing the day of the week
-            JPanel container = new JPanel(new BorderLayout());
-            container.add(scrollPane);
-            container.setBorder(BorderFactory.createTitledBorder(WEEK_DAYS[i]));
-            add(container);
-        }
     }
 
     private void startUp() {
@@ -63,29 +46,174 @@ public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemL
         jsonReader = new JsonReader(JSON_STORE);
     }
 
-    public void createTotals() {
-        JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.Y_AXIS));
-        buttonPane.add(new JLabel("Weekly Total: " + thisWeek.getWeeklyConsumption()));
-        buttonPane.add(new JLabel("Target Total: " + thisWeek.getTargetTotal()));
-        buttonPane.add(new JLabel("Last Weeks Total: " + thisWeek.getLastWeek()));
-        add(buttonPane, BorderLayout.PAGE_END);
-        buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+    private void createDaysOfWeek() {
+//        for (int i = 0; i < WEEK_DAYS.length; i++) {
+//            // new model for each week
+//            DefaultListModel<String> listModel = new DefaultListModel<>();
+//            thisWeek.addSunday("pill1");
+//            thisWeek.addSunday("pill2");
+//            for (String s : thisWeek.getSunday().keySet()) {
+//                // fill the model with elements of Sunday!!!
+//                listModel.addElement(s);
+//            }
+//            // new list for each day of the week with model
+//            JList<String> list = new JList<>(listModel);
+//            list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//            list.setVisibleRowCount(4);
+//            JScrollPane scrollPane = new JScrollPane(list);
+//            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//
+//            // border around showing the day of the week
+//            JPanel container = new JPanel(new BorderLayout());
+//            container.add(scrollPane);
+//            container.setBorder(BorderFactory.createTitledBorder(WEEK_DAYS[i]));
+//            add(container);
+//        }
+        for (int i = 0; i < WEEK_DAYS.length; i++) {
+            add(createSunday());
+        }
     }
 
-    public Component createButtonPanel() {
+    private Component createSunday() {
+        sundayListModel = new DefaultListModel<>();
+        thisWeek.addSunday("pill1");
+        thisWeek.addSunday("pill2");
+        for (String s : thisWeek.getSunday().keySet()) {
+            // fill the model with elements of Sunday!!!
+            sundayListModel.addElement(s);
+        }
+        // new sunday for each day of the week with model
+        sunday = new JList<>(sundayListModel);
+        sunday.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        sunday.setSelectedIndex(0);
+        sunday.addListSelectionListener(this);
+        sunday.setVisibleRowCount(4);
+        JScrollPane scrollPane = new JScrollPane(sunday);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        // border around showing the day of the week
+        JPanel container = new JPanel(new BorderLayout());
+        container.add(scrollPane);
+        container.setBorder(BorderFactory.createTitledBorder("Sunday"));
+//        add(container);
+        return container;
+    }
+
+
+    public void createTotals() {
+        JPanel totalsPane = new JPanel();
+        totalsPane.setLayout(new BoxLayout(totalsPane, BoxLayout.Y_AXIS));
+        totalsPane.add(new JLabel("Weekly Total: " + thisWeek.getWeeklyConsumption()));
+        totalsPane.add(new JLabel("Target Total: " + thisWeek.getTargetTotal()));
+        totalsPane.add(new JLabel("Last Weeks Total: " + thisWeek.getLastWeek()));
+//        add(totalsPane, BorderLayout.PAGE_END);
+//        totalsPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        add(totalsPane);
+    }
+
+    public Component createRemoveButton() {
+        JButton removeButton = new JButton("remove");
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
-        buttonPane.add(new Button());
-        buttonPane.add(Box.createHorizontalStrut(5));
-        buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
-        buttonPane.add(new TextField());
-        buttonPane.add(new Button());
+        buttonPane.add(removeButton);
         buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        removeButton.setActionCommand("remove");
+        removeButton.addActionListener(this);
 
         add(buttonPane, BorderLayout.PAGE_END);
         return buttonPane;
     }
+
+    public void createAddPanel() {
+        addButton = new JButton("add");
+        GraphicalTrackerApp.HireListener hireListener = new GraphicalTrackerApp.HireListener(addButton);
+        addButton.setActionCommand("add");
+        addButton.addActionListener(hireListener);
+
+        textField = new JTextField(10);
+        textField.addActionListener(hireListener);
+        textField.getDocument().addDocumentListener(hireListener);
+    }
+
+    class HireListener implements ActionListener, DocumentListener {
+        private JButton button;
+
+        public HireListener(JButton button) {
+            this.button = button;
+        }
+
+        //Required by ActionListener.
+        public void actionPerformed(ActionEvent e) {
+            String name = textField.getText();
+
+            //User didn't type in a unique name...
+            if (name.equals("") || alreadyInList(name)) {
+                Toolkit.getDefaultToolkit().beep();
+                textField.requestFocusInWindow();
+                textField.selectAll();
+                return;
+            }
+
+            int index = sunday.getSelectedIndex(); //get selected index
+            if (index == -1) { //no selection, so insert at beginning
+                index = 0;
+            } else {           //add after the selected item
+                index++;
+            }
+
+            thisWeek.addSunday(name);
+            //If we just wanted to add to the end, we'd do this:
+            sundayListModel.addElement(textField.getText());
+
+            //Reset the text field.
+            textField.requestFocusInWindow();
+            textField.setText("");
+
+            //Select the new item and make it visible.
+            sunday.setSelectedIndex(index);
+            sunday.ensureIndexIsVisible(index);
+        }
+
+        protected boolean alreadyInList(String name) {
+            return sundayListModel.contains(name);
+        }
+
+        /**
+         * Gives notification that there was an insert into the document.  The
+         * range given by the DocumentEvent bounds the freshly inserted region.
+         *
+         * @param e the document event
+         */
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+
+        }
+
+        /**
+         * Gives notification that a portion of the document has been
+         * removed.  The range is given in terms of what the view last
+         * saw (that is, before updating sticky positions).
+         *
+         * @param e the document event
+         */
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+
+        }
+
+        /**
+         * Gives notification that an attribute or set of attributes changed.
+         *
+         * @param e the document event
+         */
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+
+        }
+    }
+
 
     public JMenuBar createMenuBar() {
         JMenuBar menuBar;
@@ -108,7 +236,7 @@ public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemL
         saveItem.addActionListener(this);
         loadItem = new JMenuItem("Load week from file", KeyEvent.VK_L);
         loadItem.setMnemonic(KeyEvent.VK_B);
-        loadItem.setActionCommand("save");
+        loadItem.setActionCommand("load");
         loadItem.addActionListener(this);
 
         menu.add(saveItem);
@@ -117,17 +245,25 @@ public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemL
         return menuBar;
     }
 
-    private static void createAndShowGui() {
+    public void createAndShowGui() {
         GraphicalTrackerApp trackerApp = new GraphicalTrackerApp();
-        JFrame frame = new JFrame("Pill Tracker");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(trackerApp.createContentPane());
-        frame.setJMenuBar(trackerApp.createMenuBar());
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        trackerApp.frame = new JFrame("Pill Tracker");
+        trackerApp.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        trackerApp.frame.getContentPane().add(trackerApp.createContentPane());
+        trackerApp.frame.setJMenuBar(trackerApp.createMenuBar());
+        trackerApp.frame.pack();
+        trackerApp.frame.setLocationRelativeTo(null);
+        trackerApp.frame.setVisible(true);
         Image icon = Toolkit.getDefaultToolkit().getImage("data/pillobject.png");
-        frame.setIconImage(icon);
+        trackerApp.frame.setIconImage(icon);
+
+        JComponent newTrackerApp = new GraphicalTrackerApp();
+        JFrame jjFrame = new JFrame();
+        jjFrame.setContentPane(newTrackerApp);
+        jjFrame.setJMenuBar(createMenuBar());
+        jjFrame.pack();
+        jjFrame.setVisible(true);
+
     }
 
     /**
@@ -137,8 +273,10 @@ public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemL
     public void actionPerformed(ActionEvent e) {
         if ("save".equals(e.getActionCommand())) {
             saveWeek();
-        } else {
+        } else if ("load".equals(e.getActionCommand())) {
             loadWeek();
+        } else {
+            removeAction();
         }
     }
 
@@ -146,17 +284,29 @@ public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemL
      * Invoked when an item has been selected or deselected by the user.
      * The code written for this method performs the operations
      * that need to occur when an item is selected (or deselected).
-     *
      */
     @Override
     public void itemStateChanged(ItemEvent e) {
 
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> createAndShowGui());
-    }
 
+    public void removeAction() {
+        //This method can be called only if
+        //there's a valid selection
+        //so go ahead and remove whatever's selected.
+        String name = sunday.getSelectedValue();
+        int index = sunday.getSelectedIndex();
+        sundayListModel.remove(index);
+        if (index == sundayListModel.getSize()) {
+            //removed item in last position
+            index--;
+        }
+        sunday.setSelectedIndex(index);
+        sunday.ensureIndexIsVisible(index);
+        thisWeek.removeSunday(name);
+        // !!! NEED TO UPDATE GUI -> OR ADD NEW TOTALS PANEL
+    }
 
     // EFFECTS: saves the week to destination file
     private void saveWeek() {
@@ -173,32 +323,38 @@ public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemL
     // EFFECTS: loads workroom from file
     private void loadWeek() {
         try {
-            thisWeek = jsonReader.read();
+            this.setVisible(false);
+            this.frame.dispose();
+            GraphicalTrackerApp trackerApp = new GraphicalTrackerApp();
+            trackerApp.thisWeek = jsonReader.read();
+            trackerApp.frame = new JFrame("Pill Tracker");
+            trackerApp.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//            trackerApp.frame.getContentPane().add(trackerApp.createContentPane());
+            trackerApp.frame.setJMenuBar(trackerApp.createMenuBar());
+            trackerApp.frame.pack();
+            trackerApp.frame.setLocationRelativeTo(null);
+            trackerApp.frame.setVisible(true);
+            Image icon = Toolkit.getDefaultToolkit().getImage("data/pillobject.png");
+            trackerApp.frame.setIconImage(icon);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error: Unable to read from file");
         }
+    }
+
+    /**
+     * Called whenever the value of the selection changes.
+     *
+     * @param e the event that characterizes the change.
+     */
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
 //   UNUSED CURRENT TRACKER APP  //
     private Scanner input;
-
-    // MODIFIES: this
-    // EFFECTS: produces the items in the days of the week and the totals
-    private void viewWeek() {
-        viewSunday();
-        viewMonday();
-        viewTuesday();
-        viewWednesday();
-        viewThursday();
-        viewFriday();
-        viewSaturday();
-        System.out.println("\nWeekly Total: " + thisWeek.getWeeklyConsumption());
-        System.out.println("Target Total: " + thisWeek.getTargetTotal());
-        System.out.println(thisWeek.targetReached());
-        System.out.println("Last Weeks Total: " + thisWeek.getLastWeek());
-    }
 
     // MODIFIES: this
     // EFFECTS: runs the add menu and adds the desired item to the desired day
@@ -286,7 +442,6 @@ public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemL
         String day = pickDay();
         if (existsIn(day, name)) {
             removeFrom(day, name);
-            returnRemoveStatement(day, name);
         } else {
             System.out.println("Item not found in specified day.");
         }
@@ -342,28 +497,6 @@ public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemL
     }
 
     // MODIFIES: this
-    // EFFECTS: returns the menu messages after removing an item
-    private void returnRemoveStatement(String choice, String name) {
-        if (choice.equals("sun")) {
-            System.out.println(name + " has been removed from Sunday");
-        } else if (choice.equals("mon")) {
-            System.out.println(name + " has been removed from Monday");
-        } else if (choice.equals("tue")) {
-            System.out.println(name + " has been removed from Tuesday");
-        } else if (choice.equals("wed")) {
-            System.out.println(name + " has been removed from Wednesday");
-        } else if (choice.equals("thu")) {
-            System.out.println(name + " has been removed from Thursday");
-        } else if (choice.equals("fri")) {
-            System.out.println(name + " has been removed from Friday");
-        } else if (choice.equals("sat")) {
-            System.out.println(name + " has been removed from Saturday");
-        } else {
-            System.out.println("Invalid input. Please try again.");
-        }
-    }
-
-    // MODIFIES: this
     // EFFECTS: creates a new week with the current week's consumption stored as last week
     private void nextWeek() {
         int savedWeek = thisWeek.getWeeklyConsumption();
@@ -385,109 +518,24 @@ public class GraphicalTrackerApp extends JPanel implements ActionListener, ItemL
     }
 
 
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Sunday
-    private void viewSunday() {
-        String sundayItems = "";
-        HashMap<String, Pill> sunday = thisWeek.getSunday();
-        if (sunday != null) {
-            for (Pill pill : thisWeek.getSunday().values()) {
-                sundayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tSunday: " + sundayItems);
-        } else {
-            System.out.println("\tSunday: no items");
+    private void createMonday() {
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        thisWeek.addMonday("pill3");
+        for (String s : thisWeek.getMonday().keySet()) {
+            // fill the model with elements of Sunday!!!
+            listModel.addElement(s);
         }
-    }
+        // new monday for each day of the week with model
+        JList<String> monday = new JList<>(listModel);
+        monday.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        monday.setVisibleRowCount(4);
+        JScrollPane scrollPane = new JScrollPane(monday);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Monday
-    private void viewMonday() {
-        String mondayItems = "";
-        HashMap<String, Pill> monday = thisWeek.getMonday();
-        if (monday != null) {
-            for (Pill pill : thisWeek.getMonday().values()) {
-                mondayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tMonday: " + mondayItems);
-        } else {
-            System.out.println("\tMonday: no items");
-        }
+        // border around showing the day of the week
+        JPanel container = new JPanel(new BorderLayout());
+        container.add(scrollPane);
+        container.setBorder(BorderFactory.createTitledBorder("Monday"));
+        add(container);
     }
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Tuesday
-    private void viewTuesday() {
-        String tuesdayItems = "";
-        HashMap<String, Pill> tuesday = thisWeek.getTuesday();
-        if (tuesday != null) {
-            for (Pill pill : thisWeek.getTuesday().values()) {
-                tuesdayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tTuesday: " + tuesdayItems);
-        } else {
-            System.out.println("\tTuesday: no items");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Wednesday
-    private void viewWednesday() {
-        String wednesdayItems = "";
-        HashMap<String, Pill> wednesday = thisWeek.getWednesday();
-        if (wednesday != null) {
-            for (Pill pill : thisWeek.getWednesday().values()) {
-                wednesdayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tWednesday: " + wednesdayItems);
-        } else {
-            System.out.println("\tWednesday: no items");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Thursday
-    private void viewThursday() {
-        String thursdayItems = "";
-        HashMap<String, Pill> thursday = thisWeek.getThursday();
-        if (thursday != null) {
-            for (Pill pill : thisWeek.getThursday().values()) {
-                thursdayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tThursday: " + thursdayItems);
-        } else {
-            System.out.println("\tThursday: no items");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Friday
-    private void viewFriday() {
-        String fridayItems = "";
-        HashMap<String, Pill> friday = thisWeek.getFriday();
-        if (friday != null) {
-            for (Pill pill : thisWeek.getFriday().values()) {
-                fridayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tFriday: " + fridayItems);
-        } else {
-            System.out.println("\tFriday: no items");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Saturday
-    private void viewSaturday() {
-        String saturdayItems = "";
-        HashMap<String, Pill> saturday = thisWeek.getSaturday();
-        if (saturday != null) {
-            for (Pill pill : thisWeek.getSaturday().values()) {
-                saturdayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tSaturday: " + saturdayItems);
-        } else {
-            System.out.println("\tSaturday: no items");
-        }
-    }
-
 }
