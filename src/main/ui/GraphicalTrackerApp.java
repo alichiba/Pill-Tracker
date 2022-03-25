@@ -31,6 +31,12 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
     JButton removeButton;
     JPanel sundayContainer;
     JPanel totalsPane;
+    JTextField numField;
+    JButton targetButton;
+    Image coolImage = Toolkit.getDefaultToolkit().getImage("data/coolpillobject.png");
+    Image newImage = coolImage.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
+    ImageIcon scaledCoolImage = new ImageIcon(newImage);
+
 
     public GraphicalTrackerApp() {
         super("Graphical Pill Tracker");
@@ -39,6 +45,7 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         createDaysOfWeek();
         createRemoveButton();
         createAddPanel();
+        createTargetButton();
         createTotals();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(createMenuBar());
@@ -115,6 +122,10 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         totalsPane.add(new JLabel("Weekly Total: " + thisWeek.getWeeklyConsumption()));
         totalsPane.add(new JLabel("Target Total: " + thisWeek.getTargetTotal()));
         totalsPane.add(new JLabel("Last Weeks Total: " + thisWeek.getLastWeek()));
+        if (thisWeek.getWeeklyConsumption() == thisWeek.getTargetTotal()) {
+            JLabel targetImage = new JLabel(scaledCoolImage);
+            totalsPane.add(targetImage);
+        }
 //        add(totalsPane, BorderLayout.PAGE_END);
 //        totalsPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(totalsPane);
@@ -125,6 +136,10 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         totalsPane.add(new JLabel("Weekly Total: " + thisWeek.getWeeklyConsumption()));
         totalsPane.add(new JLabel("Target Total: " + thisWeek.getTargetTotal()));
         totalsPane.add(new JLabel("Last Weeks Total: " + thisWeek.getLastWeek()));
+        if (thisWeek.getWeeklyConsumption() == thisWeek.getTargetTotal()) {
+            JLabel targetImage = new JLabel(scaledCoolImage);
+            totalsPane.add(targetImage);
+        }
     }
 
     public void createRemoveButton() {
@@ -144,7 +159,7 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         addButton = new JButton("add");
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.PAGE_AXIS));
-        AddListener addListener = new AddListener(addButton);
+        AddListener addListener = new AddListener();
         buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         addButton.setActionCommand("add");
@@ -161,11 +176,8 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
 
 
     class AddListener implements ActionListener, DocumentListener {
-        private JButton button;
 
-        public AddListener(JButton button) {
-            this.button = button;
-        }
+        public AddListener() {}
 
         //Required by ActionListener.
         public void actionPerformed(ActionEvent e) {
@@ -368,6 +380,76 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: displays menu to set target total and sets input as the target
+    private void createTargetButton() {
+        targetButton = new JButton("set total");
+        JPanel buttonPane = new JPanel();
+        TargetListener targetListener = new TargetListener();
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.PAGE_AXIS));
+        buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        targetButton.setActionCommand("set total");
+        targetButton.addActionListener(targetListener);
+
+        numField = new JTextField(10);
+        numField.addActionListener(targetListener);
+        numField.getDocument().addDocumentListener(targetListener);
+
+        buttonPane.add(numField, BorderLayout.CENTER);
+        buttonPane.add(targetButton, BorderLayout.CENTER);
+        add(buttonPane);
+    }
+
+    class TargetListener implements ActionListener, DocumentListener {
+        public void actionPerformed(ActionEvent e) {
+            int target = Integer.parseInt(numField.getText());
+            thisWeek.setTargetTotal(target);
+
+            //Reset the text field.
+            numField.requestFocusInWindow();
+            numField.setText("");
+
+            updateTotals();
+
+            repaint();
+            revalidate();
+        }
+
+        /**
+         * Gives notification that there was an insert into the document.  The
+         * range given by the DocumentEvent bounds the freshly inserted region.
+         *
+         * @param e the document event
+         */
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+
+        }
+
+        /**
+         * Gives notification that a portion of the document has been
+         * removed.  The range is given in terms of what the view last
+         * saw (that is, before updating sticky positions).
+         *
+         * @param e the document event
+         */
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+
+        }
+
+        /**
+         * Gives notification that an attribute or set of attributes changed.
+         *
+         * @param e the document event
+         */
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+
+        }
+    }
+
     /**
      * Called whenever the value of the selection changes.
      *
@@ -392,16 +474,6 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         thisWeek.updateLastWeek(savedWeek);
         thisWeek.setTargetTotal(savedTarget);
         System.out.println("The next week has been started.");
-    }
-
-    // MODIFIES: this
-    // EFFECTS: displays menu to set target total and sets input as the target
-    private void setTotal() {
-        int target;
-        System.out.println("Enter an amount for the target total:");
-        target = input.nextInt();
-        thisWeek.setTargetTotal(target);
-        System.out.println("Target has been set to the indicated amount.");
     }
 
 
