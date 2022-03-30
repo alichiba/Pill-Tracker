@@ -1,5 +1,7 @@
 package ui;
 
+import model.Event;
+import model.EventLog;
 import model.Week;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -47,7 +49,12 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         createAddPanel();
         createTargetButton();
         createTotals();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                printLog(EventLog.getInstance());
+            }
+        });
         setJMenuBar(createMenuBar());
         Image appIcon = Toolkit.getDefaultToolkit().getImage("data/pillobject.png");
         setIconImage(appIcon);
@@ -55,6 +62,13 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
+    public void printLog(EventLog el) {
+        for (Event next : el) {
+            System.out.println(next.getDescription() + " on " + next.getDate());
+        }
+    }
+
 
     // EFFECTS: instantiates week, json writer and reader
     private void startUp() {

@@ -32,3 +32,17 @@ to log behaviour would help people form healthy habits or improve on unhealthy o
 
 - As a user, I want to be able to **save** my current tracker state to file
 - As a user, I want to be able to **load** my saved tracker state from file 
+
+---
+### Phase 4: Task 2
+Sample Series of Events in Event Log:
+Added to Sunday: pill1 on Wed Mar 30 11:45:54 PDT 2022
+Added to Sunday: pill2 on Wed Mar 30 11:45:57 PDT 2022
+Added to Sunday: pill3 on Wed Mar 30 11:45:58 PDT 2022
+Removed from Sunday: pill3 on Wed Mar 30 11:46:07 PDT 2022
+Added to Sunday: pill4 on Wed Mar 30 11:46:10 PDT 2022
+Added to Sunday: pill5 on Wed Mar 30 11:46:17 PDT 2022
+Removed from Sunday: pill5 on Wed Mar 30 11:46:21 PDT 2022
+
+### Phase 4: Task 3
+
