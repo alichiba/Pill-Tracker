@@ -43,6 +43,7 @@ public class Week {
         Pill myPill = new Pill(name);
         sunday.put(name, myPill);
         weeklyConsumption++;
+        EventLog.getInstance().logEvent(new Event("Added to Sunday: " + name));
     }
 
 
@@ -52,6 +53,7 @@ public class Week {
     public void removeSunday(String name) {
         sunday.remove(name);
         weeklyConsumption--;
+        EventLog.getInstance().logEvent(new Event("Removed from Sunday: " + name));
     }
 
     public HashMap<String, Pill> getSunday() {
@@ -66,6 +68,7 @@ public class Week {
         Pill myPill = new Pill(name);
         monday.put(name, myPill);
         weeklyConsumption++;
+        EventLog.getInstance().logEvent(new Event("Added to Monday: " + name));
     }
 
     // REQUIRES: hashmap should not be empty when called
@@ -74,6 +77,7 @@ public class Week {
     public void removeMonday(String name) {
         monday.remove(name);
         weeklyConsumption--;
+        EventLog.getInstance().logEvent(new Event("Removed from Monday: " + name));
     }
 
     public HashMap<String, Pill> getMonday() {
@@ -88,6 +92,7 @@ public class Week {
         Pill myPill = new Pill(name);
         tuesday.put(name, myPill);
         weeklyConsumption++;
+        EventLog.getInstance().logEvent(new Event("Added to Tuesday: " + name));
     }
 
     // REQUIRES: hashmap should not be empty when called
@@ -96,6 +101,7 @@ public class Week {
     public void removeTuesday(String name) {
         tuesday.remove(name);
         weeklyConsumption--;
+        EventLog.getInstance().logEvent(new Event("Removed from Tuesday: " + name));
     }
 
     public HashMap<String, Pill> getTuesday() {
@@ -110,6 +116,7 @@ public class Week {
         Pill myPill = new Pill(name);
         wednesday.put(name, myPill);
         weeklyConsumption++;
+        EventLog.getInstance().logEvent(new Event("Added to Wednesday: " + name));
     }
 
     // REQUIRES: hashmap should not be empty when called
@@ -118,6 +125,7 @@ public class Week {
     public void removeWednesday(String name) {
         wednesday.remove(name);
         weeklyConsumption--;
+        EventLog.getInstance().logEvent(new Event("Removed from Wednesday: " + name));
     }
 
     public HashMap<String, Pill> getWednesday() {
@@ -132,6 +140,7 @@ public class Week {
         Pill myPill = new Pill(name);
         thursday.put(name, myPill);
         weeklyConsumption++;
+        EventLog.getInstance().logEvent(new Event("Added to Thursday: " + name));
     }
 
     // REQUIRES: hashmap should not be empty when called
@@ -140,6 +149,7 @@ public class Week {
     public void removeThursday(String name) {
         thursday.remove(name);
         weeklyConsumption--;
+        EventLog.getInstance().logEvent(new Event("Removed from Thursday: " + name));
     }
 
     public HashMap<String, Pill> getThursday() {
@@ -154,6 +164,7 @@ public class Week {
         Pill myPill = new Pill(name);
         friday.put(name, myPill);
         weeklyConsumption++;
+        EventLog.getInstance().logEvent(new Event("Added to Friday: " + name));
     }
 
     // REQUIRES: hashmap should not be empty when called
@@ -162,6 +173,7 @@ public class Week {
     public void removeFriday(String name) {
         friday.remove(name);
         weeklyConsumption--;
+        EventLog.getInstance().logEvent(new Event("Removed from Friday: " + name));
     }
 
     public HashMap<String, Pill> getFriday() {
@@ -176,6 +188,7 @@ public class Week {
         Pill myPill = new Pill(name);
         saturday.put(name, myPill);
         weeklyConsumption++;
+        EventLog.getInstance().logEvent(new Event("Added to Saturday: " + name));
     }
 
     // REQUIRES: hashmap should not be empty when called
@@ -184,6 +197,7 @@ public class Week {
     public void removeSaturday(String name) {
         saturday.remove(name);
         weeklyConsumption--;
+        EventLog.getInstance().logEvent(new Event("Removed from Saturday: " + name));
     }
 
     public HashMap<String, Pill> getSaturday() {
