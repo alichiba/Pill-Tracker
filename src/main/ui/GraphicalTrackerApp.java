@@ -63,6 +63,7 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         setVisible(true);
     }
 
+    // EFFECTS: prints event to console for each event
     public void printLog(EventLog el) {
         for (Event next : el) {
             System.out.println(next.getDescription() + " on " + next.getDate());
