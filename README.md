@@ -35,14 +35,21 @@ to log behaviour would help people form healthy habits or improve on unhealthy o
 
 ---
 ### Phase 4: Task 2
-Sample Series of Events in Event Log:
-Added to Sunday: pill1 on Wed Mar 30 11:45:54 PDT 2022
-Added to Sunday: pill2 on Wed Mar 30 11:45:57 PDT 2022
-Added to Sunday: pill3 on Wed Mar 30 11:45:58 PDT 2022
-Removed from Sunday: pill3 on Wed Mar 30 11:46:07 PDT 2022
-Added to Sunday: pill4 on Wed Mar 30 11:46:10 PDT 2022
-Added to Sunday: pill5 on Wed Mar 30 11:46:17 PDT 2022
-Removed from Sunday: pill5 on Wed Mar 30 11:46:21 PDT 2022
+Sample Series of Events in Event Log:  
+Added to Sunday: pill1 on Wed Mar 30 11:45:54 PDT 2022  
+Added to Sunday: pill2 on Wed Mar 30 11:45:57 PDT 2022  
+Added to Sunday: pill3 on Wed Mar 30 11:45:58 PDT 2022  
+Removed from Sunday: pill3 on Wed Mar 30 11:46:07 PDT 2022  
+Added to Sunday: pill4 on Wed Mar 30 11:46:10 PDT 2022  
+Added to Sunday: pill5 on Wed Mar 30 11:46:17 PDT 2022  
+Removed from Sunday: pill5 on Wed Mar 30 11:46:21 PDT 2022  
 
 ### Phase 4: Task 3
+There is definitely some refactoring that should be done to improve on this
+program as it is currently designed. Looking at the UML diagram alone, there are not too
+many excessive associations, but in the code there are areas that could be refactored to simplify the code.
+- Weekdays could implement an interface to abstract similarities and simplify operations on different days in both the Week and TrackerApp classes
+- Alternatively, the weekdays could potentially extend an abstract class due to the duplication of code in the Week and TrackerApp classes
+- Potentially, each weekday could also be in its own class
+- Methods like addListener in the GraphicalTrackerApp could be split into a separate class to improve cohesion
 
