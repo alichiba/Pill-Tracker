@@ -1,5 +1,6 @@
 package persistence;
 
+import model.Day;
 import model.Week;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -63,89 +64,29 @@ public class JsonReader {
     // MODIFIES: w
     // EFFECTS: parses days/JSONArrays from JSON object and adds them to workroom
     private void addDay(Week w, JSONObject savedJsonObject) {
-        JSONArray newSunArray = savedJsonObject.getJSONArray("sunday");
-        JSONArray newMonArray = savedJsonObject.getJSONArray("monday");
-        JSONArray newTueArray = savedJsonObject.getJSONArray("tuesday");
-        JSONArray newWedArray = savedJsonObject.getJSONArray("wednesday");
-        JSONArray newThuArray = savedJsonObject.getJSONArray("thursday");
-        JSONArray newFriArray = savedJsonObject.getJSONArray("friday");
-        JSONArray newSatArray = savedJsonObject.getJSONArray("saturday");
-        addSunday(w, newSunArray);
-        addMonday(w, newMonArray);
-        addTuesday(w, newTueArray);
-        addWednesday(w, newWedArray);
-        addThursday(w, newThuArray);
-        addFriday(w, newFriArray);
-        addSaturday(w, newSatArray);
+        JSONArray sunArray = savedJsonObject.getJSONArray("sunday");
+        JSONArray monArray = savedJsonObject.getJSONArray("monday");
+        JSONArray tueArray = savedJsonObject.getJSONArray("tuesday");
+        JSONArray wedArray = savedJsonObject.getJSONArray("wednesday");
+        JSONArray thuArray = savedJsonObject.getJSONArray("thursday");
+        JSONArray friArray = savedJsonObject.getJSONArray("friday");
+        JSONArray satArray = savedJsonObject.getJSONArray("saturday");
+        addPills(w, w.getSunday(), sunArray);
+        addPills(w, w.getMonday(), monArray);
+        addPills(w, w.getTuesday(), tueArray);
+        addPills(w, w.getWednesday(), wedArray);
+        addPills(w, w.getThursday(), thuArray);
+        addPills(w, w.getFriday(), friArray);
+        addPills(w, w.getSaturday(), satArray);
     }
 
-    // MODIFIES: w
-    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Sunday of given week
-    private void addSunday(Week w, JSONArray newArray) {
+    // TODO add docs
+    private void addPills(Week w, Day d, JSONArray newArray) {
         for (Object json : newArray) {
             JSONObject nextJson = (JSONObject) json;
             String s = nextJson.getString("name");
-            w.addSunday(s);
+            w.add(d, s);
         }
     }
 
-    // MODIFIES: w
-    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Monday of given week
-    private void addMonday(Week w, JSONArray newArray) {
-        for (Object json : newArray) {
-            JSONObject nextJson = (JSONObject) json;
-            String s = nextJson.getString("name");
-            w.addMonday(s);
-        }
-    }
-
-    // MODIFIES: w
-    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Tuesday of given week
-    private void addTuesday(Week w, JSONArray newArray) {
-        for (Object json : newArray) {
-            JSONObject nextJson = (JSONObject) json;
-            String s = nextJson.getString("name");
-            w.addTuesday(s);
-        }
-    }
-
-    // MODIFIES: w
-    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Wednesday of given week
-    private void addWednesday(Week w, JSONArray newArray) {
-        for (Object json : newArray) {
-            JSONObject nextJson = (JSONObject) json;
-            String s = nextJson.getString("name");
-            w.addWednesday(s);
-        }
-    }
-
-    // MODIFIES: w
-    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Thursday of given week
-    private void addThursday(Week w, JSONArray newArray) {
-        for (Object json : newArray) {
-            JSONObject nextJson = (JSONObject) json;
-            String s = nextJson.getString("name");
-            w.addThursday(s);
-        }
-    }
-
-    // MODIFIES: w
-    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Friday of given week
-    private void addFriday(Week w, JSONArray newArray) {
-        for (Object json : newArray) {
-            JSONObject nextJson = (JSONObject) json;
-            String s = nextJson.getString("name");
-            w.addFriday(s);
-        }
-    }
-
-    // MODIFIES: w
-    // EFFECTS: takes JSONObjects from given Array and constructs a Pill into Saturday of given week
-    private void addSaturday(Week w, JSONArray newArray) {
-        for (Object json : newArray) {
-            JSONObject nextJson = (JSONObject) json;
-            String s = nextJson.getString("name");
-            w.addSaturday(s);
-        }
-    }
 }

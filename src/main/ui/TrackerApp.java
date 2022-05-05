@@ -1,5 +1,6 @@
 package ui;
 
+import model.Day;
 import model.Pill;
 import model.Week;
 import persistence.JsonReader;
@@ -8,6 +9,7 @@ import persistence.JsonWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Scanner;
 
 // Pill Tracker Application console user interface
@@ -32,20 +34,16 @@ public class TrackerApp {
     public void runTracker() {
         boolean keepGoing = true;
         String command;
-
         startUp();
-
         while (keepGoing) {
             displayMenu();
             command = input.next().toLowerCase();
-
             if (command.equals("e")) {
                 keepGoing = false;
             } else {
                 processCommand(command);
             }
         }
-
         System.out.println("\nExited successfully. See you soon!");
     }
 
@@ -72,35 +70,44 @@ public class TrackerApp {
     // MODIFIES: this
     // EFFECTS: processes the input choice for the main menu
     private void processCommand(String command) {
-        if (command.equals("v")) {
-            viewWeek();
-        } else if (command.equals("a")) {
-            addItem();
-        } else if (command.equals("r")) {
-            removeItem();
-        } else if (command.equals("t")) {
-            setTotal();
-        } else if (command.equals("n")) {
-            nextWeek();
-        } else if (command.equals("s")) {
-            saveWeek();
-        } else if (command.equals("l")) {
-            loadWeek();
-        } else {
-            System.out.println("Invalid Selection...");
+        switch (command) {
+            case "v":
+                viewWeek();
+                break;
+            case "a":
+                addItem();
+                break;
+            case "r":
+                removeItem();
+                break;
+            case "t":
+                setTotal();
+                break;
+            case "n":
+                nextWeek();
+                break;
+            case "s":
+                saveWeek();
+                break;
+            case "l":
+                loadWeek();
+                break;
+            default:
+                System.out.println("Invalid Selection...");
+                break;
         }
     }
 
     // MODIFIES: this
     // EFFECTS: produces the items in the days of the week and the totals
     private void viewWeek() {
-        viewSunday();
-        viewMonday();
-        viewTuesday();
-        viewWednesday();
-        viewThursday();
-        viewFriday();
-        viewSaturday();
+        view(thisWeek.getSunday());
+        view(thisWeek.getMonday());
+        view(thisWeek.getTuesday());
+        view(thisWeek.getWednesday());
+        view(thisWeek.getThursday());
+        view(thisWeek.getFriday());
+        view(thisWeek.getSaturday());
         System.out.println("\nWeekly Total: " + thisWeek.getWeeklyConsumption());
         System.out.println("Target Total: " + thisWeek.getTargetTotal());
         System.out.println(thisWeek.targetReached());
@@ -111,9 +118,12 @@ public class TrackerApp {
     // EFFECTS: runs the add menu and adds the desired item to the desired day
     private void addItem() {
         System.out.println("Enter name of item:");
-        String name = input.next();
+        String name = input.next().toLowerCase();
         System.out.println("\nAdd to:");
         String day = pickDay();
+        // TODO!!! add exception (catch exception here, throw in Day?) for same name same day
+        // message: Cannot add because name already exists in specified day.
+        //          Consider adding a number after the name ie. "pill2"
         addTo(day, name);
         returnAddStatement(day, name);
     }
@@ -139,25 +149,25 @@ public class TrackerApp {
     private void addTo(String choice, String name) {
         switch (choice) {
             case "sun":
-                thisWeek.addSunday(name);
+                thisWeek.add(thisWeek.getSunday(), name);
                 break;
             case "mon":
-                thisWeek.addMonday(name);
+                thisWeek.add(thisWeek.getMonday(), name);
                 break;
             case "tue":
-                thisWeek.addTuesday(name);
+                thisWeek.add(thisWeek.getTuesday(), name);
                 break;
             case "wed":
-                thisWeek.addWednesday(name);
+                thisWeek.add(thisWeek.getWednesday(), name);
                 break;
             case "thu":
-                thisWeek.addThursday(name);
+                thisWeek.add(thisWeek.getThursday(), name);
                 break;
             case "fri":
-                thisWeek.addFriday(name);
+                thisWeek.add(thisWeek.getFriday(), name);
                 break;
             case "sat":
-                thisWeek.addSaturday(name);
+                thisWeek.add(thisWeek.getSaturday(), name);
                 break;
         }
     }
@@ -165,22 +175,31 @@ public class TrackerApp {
 
     // EFFECTS: returns the menu messages after adding an item
     private void returnAddStatement(String choice, String name) {
-        if (choice.equals("sun")) {
-            System.out.println(name + " has been added to Sunday");
-        } else if (choice.equals("mon")) {
-            System.out.println(name + " has been added to Monday");
-        } else if (choice.equals("tue")) {
-            System.out.println(name + " has been added to Tuesday");
-        } else if (choice.equals("wed")) {
-            System.out.println(name + " has been added to Wednesday");
-        } else if (choice.equals("thu")) {
-            System.out.println(name + " has been added to Thursday");
-        } else if (choice.equals("fri")) {
-            System.out.println(name + " has been added to Friday");
-        } else if (choice.equals("sat")) {
-            System.out.println(name + " has been added to Saturday");
-        } else {
-            System.out.println("Invalid input. Please try again.");
+        switch (choice) {
+            case "sun":
+                System.out.println(name + " has been added to Sunday");
+                break;
+            case "mon":
+                System.out.println(name + " has been added to Monday");
+                break;
+            case "tue":
+                System.out.println(name + " has been added to Tuesday");
+                break;
+            case "wed":
+                System.out.println(name + " has been added to Wednesday");
+                break;
+            case "thu":
+                System.out.println(name + " has been added to Thursday");
+                break;
+            case "fri":
+                System.out.println(name + " has been added to Friday");
+                break;
+            case "sat":
+                System.out.println(name + " has been added to Saturday");
+                break;
+            default:
+                System.out.println("Invalid input. Please try again.");
+                break;
         }
     }
 
@@ -188,34 +207,42 @@ public class TrackerApp {
     // EFFECTS: finds item given name and removes it from given day
     private void removeItem() {
         System.out.println("Enter name of item:");
-        String name = input.next();
+        String name = input.next().toLowerCase();
         System.out.println("\nRemove from:");
         String day = pickDay();
         if (existsIn(day, name)) {
             removeFrom(day, name);
             returnRemoveStatement(day, name);
         } else {
-            System.out.println("Item not found in specified day.");
+            System.out.println("Item not found.");
         }
     }
 
     // EFFECTS: looks to see if a given name exists in the given day of the week
     private boolean existsIn(String choice, String name) {
         boolean exists = false;
-        if (choice.equals("sun")) {
-            exists = thisWeek.getSunday().containsKey(name);
-        } else if (choice.equals("mon")) {
-            exists = thisWeek.getMonday().containsKey(name);
-        } else if (choice.equals("tue")) {
-            exists = thisWeek.getTuesday().containsKey(name);
-        } else if (choice.equals("wed")) {
-            exists = thisWeek.getWednesday().containsKey(name);
-        } else if (choice.equals("thu")) {
-            exists = thisWeek.getThursday().containsKey(name);
-        } else if (choice.equals("fri")) {
-            exists = thisWeek.getFriday().containsKey(name);
-        } else if (choice.equals("sat")) {
-            exists = thisWeek.getSaturday().containsKey(name);
+        switch (choice) {
+            case "sun":
+                exists = thisWeek.getSunday().getMap().containsKey(name);
+                break;
+            case "mon":
+                exists = thisWeek.getMonday().getMap().containsKey(name);
+                break;
+            case "tue":
+                exists = thisWeek.getTuesday().getMap().containsKey(name);
+                break;
+            case "wed":
+                exists = thisWeek.getWednesday().getMap().containsKey(name);
+                break;
+            case "thu":
+                exists = thisWeek.getThursday().getMap().containsKey(name);
+                break;
+            case "fri":
+                exists = thisWeek.getFriday().getMap().containsKey(name);
+                break;
+            case "sat":
+                exists = thisWeek.getSaturday().getMap().containsKey(name);
+                break;
         }
         return exists;
     }
@@ -225,25 +252,25 @@ public class TrackerApp {
     private void removeFrom(String choice, String name) {
         switch (choice) {
             case "sun":
-                thisWeek.removeSunday(name);
+                thisWeek.remove(thisWeek.getSunday(), name);
                 break;
             case "mon":
-                thisWeek.removeMonday(name);
+                thisWeek.remove(thisWeek.getMonday(), name);
                 break;
             case "tue":
-                thisWeek.removeTuesday(name);
+                thisWeek.remove(thisWeek.getTuesday(), name);
                 break;
             case "wed":
-                thisWeek.removeWednesday(name);
+                thisWeek.remove(thisWeek.getWednesday(), name);
                 break;
             case "thu":
-                thisWeek.removeThursday(name);
+                thisWeek.remove(thisWeek.getThursday(), name);
                 break;
             case "fri":
-                thisWeek.removeFriday(name);
+                thisWeek.remove(thisWeek.getFriday(), name);
                 break;
             case "sat":
-                thisWeek.removeSaturday(name);
+                thisWeek.remove(thisWeek.getSaturday(), name);
                 break;
         }
     }
@@ -251,22 +278,28 @@ public class TrackerApp {
     // MODIFIES: this
     // EFFECTS: returns the menu messages after removing an item
     private void returnRemoveStatement(String choice, String name) {
-        if (choice.equals("sun")) {
-            System.out.println(name + " has been removed from Sunday");
-        } else if (choice.equals("mon")) {
-            System.out.println(name + " has been removed from Monday");
-        } else if (choice.equals("tue")) {
-            System.out.println(name + " has been removed from Tuesday");
-        } else if (choice.equals("wed")) {
-            System.out.println(name + " has been removed from Wednesday");
-        } else if (choice.equals("thu")) {
-            System.out.println(name + " has been removed from Thursday");
-        } else if (choice.equals("fri")) {
-            System.out.println(name + " has been removed from Friday");
-        } else if (choice.equals("sat")) {
-            System.out.println(name + " has been removed from Saturday");
-        } else {
-            System.out.println("Invalid input. Please try again.");
+        switch (choice) {
+            case "sun":
+                System.out.println(name + " has been removed from Sunday");
+                break;
+            case "mon":
+                System.out.println(name + " has been removed from Monday");
+                break;
+            case "tue":
+                System.out.println(name + " has been removed from Tuesday");
+                break;
+            case "wed":
+                System.out.println(name + " has been removed from Wednesday");
+                break;
+            case "thu":
+                System.out.println(name + " has been removed from Thursday");
+                break;
+            case "fri":
+                System.out.println(name + " has been removed from Friday");
+                break;
+            case "sat":
+                System.out.println(name + " has been removed from Saturday");
+                break;
         }
     }
 
@@ -291,112 +324,20 @@ public class TrackerApp {
         System.out.println("Target has been set to the indicated amount.");
     }
 
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Sunday
-    private void viewSunday() {
-        String sundayItems = "";
-        HashMap<String, Pill> sunday = thisWeek.getSunday();
-        if (sunday != null) {
-            for (Pill pill : thisWeek.getSunday().values()) {
-                sundayItems += pill.getName() + ", ";
+    // TODO add doc
+    private void view(Day day) {
+        String items = "";
+        HashMap<String, Pill> dayMap = day.getMap();
+        if (dayMap != null) {
+            for (Pill p : dayMap.values()) {
+                items += p.getName() + ", ";
             }
-            System.out.println("\tSunday: " + sundayItems);
+            System.out.println("\tSunday: " + items);
         } else {
             System.out.println("\tSunday: no items");
         }
-    }
 
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Monday
-    private void viewMonday() {
-        String mondayItems = "";
-        HashMap<String, Pill> monday = thisWeek.getMonday();
-        if (monday != null) {
-            for (Pill pill : thisWeek.getMonday().values()) {
-                mondayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tMonday: " + mondayItems);
-        } else {
-            System.out.println("\tMonday: no items");
-        }
     }
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Tuesday
-    private void viewTuesday() {
-        String tuesdayItems = "";
-        HashMap<String, Pill> tuesday = thisWeek.getTuesday();
-        if (tuesday != null) {
-            for (Pill pill : thisWeek.getTuesday().values()) {
-                tuesdayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tTuesday: " + tuesdayItems);
-        } else {
-            System.out.println("\tTuesday: no items");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Wednesday
-    private void viewWednesday() {
-        String wednesdayItems = "";
-        HashMap<String, Pill> wednesday = thisWeek.getWednesday();
-        if (wednesday != null) {
-            for (Pill pill : thisWeek.getWednesday().values()) {
-                wednesdayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tWednesday: " + wednesdayItems);
-        } else {
-            System.out.println("\tWednesday: no items");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Thursday
-    private void viewThursday() {
-        String thursdayItems = "";
-        HashMap<String, Pill> thursday = thisWeek.getThursday();
-        if (thursday != null) {
-            for (Pill pill : thisWeek.getThursday().values()) {
-                thursdayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tThursday: " + thursdayItems);
-        } else {
-            System.out.println("\tThursday: no items");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Friday
-    private void viewFriday() {
-        String fridayItems = "";
-        HashMap<String, Pill> friday = thisWeek.getFriday();
-        if (friday != null) {
-            for (Pill pill : thisWeek.getFriday().values()) {
-                fridayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tFriday: " + fridayItems);
-        } else {
-            System.out.println("\tFriday: no items");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: lists the names of items stored in Saturday
-    private void viewSaturday() {
-        String saturdayItems = "";
-        HashMap<String, Pill> saturday = thisWeek.getSaturday();
-        if (saturday != null) {
-            for (Pill pill : thisWeek.getSaturday().values()) {
-                saturdayItems += pill.getName() + ", ";
-            }
-            System.out.println("\tSaturday: " + saturdayItems);
-        } else {
-            System.out.println("\tSaturday: no items");
-        }
-    }
-
 
     // EFFECTS: saves the week to destination file
     private void saveWeek() {

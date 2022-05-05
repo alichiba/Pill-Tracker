@@ -17,38 +17,38 @@ class WeekTest {
 
     @Test
     void testWeek() {
-        assertTrue(myWeek.getSunday().isEmpty());
-        assertTrue(myWeek.getMonday().isEmpty());
-        assertTrue(myWeek.getTuesday().isEmpty());
-        assertTrue(myWeek.getWednesday().isEmpty());
-        assertTrue(myWeek.getThursday().isEmpty());
-        assertTrue(myWeek.getFriday().isEmpty());
-        assertTrue(myWeek.getSaturday().isEmpty());
+        assertTrue(myWeek.getSunday().getMap().isEmpty());
+        assertTrue(myWeek.getMonday().getMap().isEmpty());
+        assertTrue(myWeek.getTuesday().getMap().isEmpty());
+        assertTrue(myWeek.getWednesday().getMap().isEmpty());
+        assertTrue(myWeek.getThursday().getMap().isEmpty());
+        assertTrue(myWeek.getFriday().getMap().isEmpty());
+        assertTrue(myWeek.getSaturday().getMap().isEmpty());
         assertEquals(0, myWeek.getWeeklyConsumption());
         assertEquals(0, myWeek.getLastWeek());
     }
 
     @Test
     void testAddSunday() {
-        myWeek.addSunday("advil");
-        assertTrue(myWeek.getSunday().containsKey("advil"));
-        assertEquals(1, myWeek.getSunday().size());
+        myWeek.add(myWeek.getSunday(), "advil");
+        assertTrue(myWeek.getSunday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getSunday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
     }
 
     @Test
     void testRemoveSunday() {
-        myWeek.addSunday("advil");
-        myWeek.addSunday("paracetamol");
+        myWeek.add(myWeek.getSunday(), "advil");
+        myWeek.add(myWeek.getSunday(), "paracetamol");
 
-        myWeek.removeSunday("advil");
-        assertFalse(myWeek.getSunday().containsKey("advil"));
-        assertEquals(1, myWeek.getSunday().size());
+        myWeek.remove(myWeek.getSunday(),"advil");
+        assertFalse(myWeek.getSunday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getSunday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
 
-        myWeek.removeSunday("paracetamol");
-        assertFalse(myWeek.getSunday().containsKey("paracetamol"));
-        assertEquals(0, myWeek.getSunday().size());
+        myWeek.remove(myWeek.getSunday(),"paracetamol");
+        assertFalse(myWeek.getSunday().getMap().containsKey("paracetamol"));
+        assertEquals(0, myWeek.getSunday().getMap().size());
         assertEquals(0, myWeek.getWeeklyConsumption());
 
     }
@@ -56,148 +56,148 @@ class WeekTest {
 
     @Test
     void testAddMonday() {
-        myWeek.addMonday("advil");
-        assertTrue(myWeek.getMonday().containsKey("advil"));
-        assertEquals(1, myWeek.getMonday().size());
+        myWeek.add(myWeek.getMonday(),"advil");
+        assertTrue(myWeek.getMonday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getMonday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
     }
 
     @Test
     void testRemoveMonday() {
-        myWeek.addMonday("advil");
-        myWeek.addMonday("paracetamol");
+        myWeek.add(myWeek.getMonday(),"advil");
+        myWeek.add(myWeek.getMonday(),"paracetamol");
 
-        myWeek.removeMonday("advil");
-        assertFalse(myWeek.getMonday().containsKey("advil"));
-        assertEquals(1, myWeek.getMonday().size());
+        myWeek.remove(myWeek.getMonday(),"advil");
+        assertFalse(myWeek.getMonday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getMonday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
 
-        myWeek.removeMonday("paracetamol");
-        assertFalse(myWeek.getMonday().containsKey("paracetamol"));
-        assertEquals(0, myWeek.getMonday().size());
+        myWeek.remove(myWeek.getMonday(),"paracetamol");
+        assertFalse(myWeek.getMonday().getMap().containsKey("paracetamol"));
+        assertEquals(0, myWeek.getMonday().getMap().size());
         assertEquals(0, myWeek.getWeeklyConsumption());
     }
 
 
     @Test
     void testAddTuesday() {
-        myWeek.addTuesday("advil");
-        assertTrue(myWeek.getTuesday().containsKey("advil"));
-        assertEquals(1, myWeek.getTuesday().size());
+        myWeek.add(myWeek.getTuesday(), "advil");
+        assertTrue(myWeek.getTuesday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getTuesday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
     }
 
     @Test
     void testRemoveTuesday() {
-        myWeek.addTuesday("advil");
-        myWeek.addTuesday("paracetamol");
+        myWeek.add(myWeek.getTuesday(), "advil");
+        myWeek.add(myWeek.getTuesday(),"paracetamol");
 
-        myWeek.removeTuesday("advil");
-        assertFalse(myWeek.getTuesday().containsKey("advil"));
-        assertEquals(1, myWeek.getTuesday().size());
+        myWeek.remove(myWeek.getTuesday(),"advil");
+        assertFalse(myWeek.getTuesday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getTuesday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
 
-        myWeek.removeTuesday("paracetamol");
-        assertFalse(myWeek.getTuesday().containsKey("paracetamol"));
-        assertEquals(0, myWeek.getTuesday().size());
+        myWeek.remove(myWeek.getTuesday(),"paracetamol");
+        assertFalse(myWeek.getTuesday().getMap().containsKey("paracetamol"));
+        assertEquals(0, myWeek.getTuesday().getMap().size());
         assertEquals(0, myWeek.getWeeklyConsumption());
     }
 
 
     @Test
     void testAddWednesday() {
-        myWeek.addWednesday("advil");
-        assertTrue(myWeek.getWednesday().containsKey("advil"));
-        assertEquals(1, myWeek.getWednesday().size());
+        myWeek.add(myWeek.getWednesday(), "advil");
+        assertTrue(myWeek.getWednesday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getWednesday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
     }
 
     @Test
     void testRemoveWednesday() {
-        myWeek.addWednesday("advil");
-        myWeek.addWednesday("paracetamol");
+        myWeek.add(myWeek.getWednesday(), "advil");
+        myWeek.add(myWeek.getWednesday(),"paracetamol");
 
-        myWeek.removeWednesday("advil");
-        assertFalse(myWeek.getWednesday().containsKey("advil"));
-        assertEquals(1, myWeek.getWednesday().size());
+        myWeek.remove(myWeek.getWednesday(),"advil");
+        assertFalse(myWeek.getWednesday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getWednesday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
 
-        myWeek.removeWednesday("paracetamol");
-        assertFalse(myWeek.getWednesday().containsKey("paracetamol"));
-        assertEquals(0, myWeek.getWednesday().size());
+        myWeek.remove(myWeek.getWednesday(),"paracetamol");
+        assertFalse(myWeek.getWednesday().getMap().containsKey("paracetamol"));
+        assertEquals(0, myWeek.getWednesday().getMap().size());
         assertEquals(0, myWeek.getWeeklyConsumption());
     }
 
     @Test
     void testAddThursday() {
-        myWeek.addThursday("advil");
-        assertTrue(myWeek.getThursday().containsKey("advil"));
-        assertEquals(1, myWeek.getThursday().size());
+        myWeek.add(myWeek.getThursday(), "advil");
+        assertTrue(myWeek.getThursday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getThursday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
     }
 
     @Test
     void testRemoveThursday() {
-        myWeek.addThursday("advil");
-        myWeek.addThursday("paracetamol");
+        myWeek.add(myWeek.getThursday(), "advil");
+        myWeek.add(myWeek.getThursday(),"paracetamol");
 
-        myWeek.removeThursday("advil");
-        assertFalse(myWeek.getThursday().containsKey("advil"));
-        assertEquals(1, myWeek.getThursday().size());
+        myWeek.remove(myWeek.getThursday(),"advil");
+        assertFalse(myWeek.getThursday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getThursday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
 
-        myWeek.removeThursday("paracetamol");
-        assertFalse(myWeek.getThursday().containsKey("paracetamol"));
-        assertEquals(0, myWeek.getThursday().size());
+        myWeek.remove(myWeek.getThursday(),"paracetamol");
+        assertFalse(myWeek.getThursday().getMap().containsKey("paracetamol"));
+        assertEquals(0, myWeek.getThursday().getMap().size());
         assertEquals(0, myWeek.getWeeklyConsumption());
     }
 
 
     @Test
     void testAddFriday() {
-        myWeek.addFriday("advil");
-        assertTrue(myWeek.getFriday().containsKey("advil"));
-        assertEquals(1, myWeek.getFriday().size());
+        myWeek.add(myWeek.getFriday(), "advil");
+        assertTrue(myWeek.getFriday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getFriday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
     }
 
     @Test
     void testRemoveFriday() {
-        myWeek.addFriday("advil");
-        myWeek.addFriday("paracetamol");
+        myWeek.add(myWeek.getFriday(), "advil");
+        myWeek.add(myWeek.getFriday(),"paracetamol");
 
-        myWeek.removeFriday("advil");
-        assertFalse(myWeek.getFriday().containsKey("advil"));
-        assertEquals(1, myWeek.getFriday().size());
+        myWeek.remove(myWeek.getFriday(),"advil");
+        assertFalse(myWeek.getFriday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getFriday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
 
-        myWeek.removeFriday("paracetamol");
-        assertFalse(myWeek.getFriday().containsKey("paracetamol"));
-        assertEquals(0, myWeek.getFriday().size());
+        myWeek.remove(myWeek.getFriday(),"paracetamol");
+        assertFalse(myWeek.getFriday().getMap().containsKey("paracetamol"));
+        assertEquals(0, myWeek.getFriday().getMap().size());
         assertEquals(0, myWeek.getWeeklyConsumption());
     }
 
     @Test
     void testAddSaturday() {
-        myWeek.addSaturday("advil");
-        assertTrue(myWeek.getSaturday().containsKey("advil"));
-        assertEquals(1, myWeek.getSaturday().size());
+        myWeek.add(myWeek.getSaturday(), "advil");
+        assertTrue(myWeek.getSaturday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getSaturday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
     }
 
     @Test
     void testRemoveSaturday() {
-        myWeek.addSaturday("advil");
-        myWeek.addSaturday("paracetamol");
+        myWeek.add(myWeek.getSaturday(), "advil");
+        myWeek.add(myWeek.getSaturday(),"paracetamol");
 
-        myWeek.removeSaturday("advil");
-        assertFalse(myWeek.getSaturday().containsKey("advil"));
-        assertEquals(1, myWeek.getSaturday().size());
+        myWeek.remove(myWeek.getSaturday(),"advil");
+        assertFalse(myWeek.getSaturday().getMap().containsKey("advil"));
+        assertEquals(1, myWeek.getSaturday().getMap().size());
         assertEquals(1, myWeek.getWeeklyConsumption());
 
-        myWeek.removeSaturday("paracetamol");
-        assertFalse(myWeek.getSaturday().containsKey("paracetamol"));
-        assertEquals(0, myWeek.getSaturday().size());
+        myWeek.remove(myWeek.getSaturday(),"paracetamol");
+        assertFalse(myWeek.getSaturday().getMap().containsKey("paracetamol"));
+        assertEquals(0, myWeek.getSaturday().getMap().size());
         assertEquals(0, myWeek.getWeeklyConsumption());
     }
 
@@ -219,12 +219,12 @@ class WeekTest {
         assertTrue(myWeek.getWeeklyConsumption() < myWeek.getTargetTotal());
         assertEquals("The weekly consumption is below the target total", myWeek.targetReached());
 
-        myWeek.addSaturday("meth");
-        myWeek.addFriday("opium");
+        myWeek.add(myWeek.getSaturday(), "meth");
+        myWeek.add(myWeek.getFriday(), "opium");
         assertEquals(myWeek.getWeeklyConsumption(), myWeek.getTargetTotal());
         assertEquals("The target total has been reached", myWeek.targetReached());
 
-        myWeek.addWednesday("aspirin");
+        myWeek.add(myWeek.getWednesday(), "aspirin");
         assertTrue(myWeek.getWeeklyConsumption() > myWeek.getTargetTotal());
         assertEquals("The weekly consumption is above the target total", myWeek.targetReached());
     }
@@ -257,13 +257,13 @@ class WeekTest {
 
     @Test
     void testToJsonWithPills() {
-        myWeek.addSunday("tylenol");
-        myWeek.addMonday("tylenol");
-        myWeek.addTuesday("tylenol");
-        myWeek.addWednesday("tylenol");
-        myWeek.addThursday("tylenol");
-        myWeek.addFriday("tylenol");
-        myWeek.addSaturday("tylenol");
+        myWeek.add(myWeek.getSunday(), "tylenol");
+        myWeek.add(myWeek.getMonday(), "tylenol");
+        myWeek.add(myWeek.getTuesday(), "tylenol");
+        myWeek.add(myWeek.getWednesday(), "tylenol");
+        myWeek.add(myWeek.getThursday(), "tylenol");
+        myWeek.add(myWeek.getFriday(), "tylenol");
+        myWeek.add(myWeek.getSaturday(), "tylenol");
 
         assertEquals("new week", myWeek.toJson().getString("name"));
         assertEquals(7, myWeek.toJson().optInt("weeklyConsumption"));
@@ -281,8 +281,8 @@ class WeekTest {
 
     @Test
     void testPillsToJson() {
-        assertTrue(myWeek.pillsToJson(myWeek.getSunday()).isEmpty());
-        myWeek.addSunday("advil");
-        assertEquals(1, myWeek.pillsToJson(myWeek.getSunday()).length());
+        assertTrue(myWeek.pillsToJson(myWeek.getSunday().getMap()).isEmpty());
+        myWeek.add(myWeek.getSunday(), "advil");
+        assertEquals(1, myWeek.pillsToJson(myWeek.getSunday().getMap()).length());
     }
 }

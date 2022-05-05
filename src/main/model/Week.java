@@ -8,13 +8,13 @@ import java.util.Map;
 
 // Represents a week with 7 days, the total weekly consumption, last week's consumption, and a target
 public class Week {
-    private final HashMap<String, Pill> sunday;
-    private final HashMap<String, Pill> monday;
-    private final HashMap<String, Pill> tuesday;
-    private final HashMap<String, Pill> wednesday;
-    private final HashMap<String, Pill> thursday;
-    private final HashMap<String, Pill> friday;
-    private final HashMap<String, Pill> saturday;
+    private final Day sunday;
+    private final Day monday;
+    private final Day tuesday;
+    private final Day wednesday;
+    private final Day thursday;
+    private final Day friday;
+    private final Day saturday;
     private int weeklyConsumption;
     private int lastWeek;
     private int targetTotal;
@@ -22,186 +22,31 @@ public class Week {
 
     // EFFECTS: creates new Week with name, no items, and 0 for totals
     public Week(String name) {
-        this.sunday = new HashMap<>();
-        this.monday = new HashMap<>();
-        this.tuesday = new HashMap<>();
-        this.wednesday = new HashMap<>();
-        this.thursday = new HashMap<>();
-        this.friday = new HashMap<>();
-        this.saturday = new HashMap<>();
+        this.sunday = new Day("sunday");
+        this.monday = new Day("monday");
+        this.tuesday = new Day("tuesday");
+        this.wednesday = new Day("wednesday");
+        this.thursday = new Day("thursday");
+        this.friday = new Day("friday");
+        this.saturday = new Day("saturday");
+
         this.weeklyConsumption = 0;
         this.lastWeek = 0;
         this.targetTotal = 0;
         this.name = name;
     }
 
-    //SUNDAY METHODS
-
-    // MODIFIES: this
-    // EFFECTS: Creates a new pill with given name and adds it to Sunday
-    public void addSunday(String name) {
+    public void add(Day day, String name) {
         Pill myPill = new Pill(name);
-        sunday.put(name, myPill);
+        day.getMap().put(name, myPill);
         weeklyConsumption++;
-        EventLog.getInstance().logEvent(new Event("Added to Sunday: " + name));
+        EventLog.getInstance().logEvent(new Event("Added to " + day.getName() + ": " + name));
     }
 
-
-    // REQUIRES: hashmap should not be empty when called
-    // MODIFIES: this
-    // EFFECTS: Removes a pill with given name from Sunday
-    public void removeSunday(String name) {
-        sunday.remove(name);
+    public void remove(Day day, String name) {
+        day.getMap().remove(name);
         weeklyConsumption--;
-        EventLog.getInstance().logEvent(new Event("Removed from Sunday: " + name));
-    }
-
-    public HashMap<String, Pill> getSunday() {
-        return sunday;
-    }
-
-    //MONDAY METHODS
-
-    // MODIFIES: this
-    // EFFECTS: Creates a new pill with given name and adds it to Monday
-    public void addMonday(String name) {
-        Pill myPill = new Pill(name);
-        monday.put(name, myPill);
-        weeklyConsumption++;
-        EventLog.getInstance().logEvent(new Event("Added to Monday: " + name));
-    }
-
-    // REQUIRES: hashmap should not be empty when called
-    // MODIFIES: this
-    // EFFECTS: Removes a pill with given name from Monday
-    public void removeMonday(String name) {
-        monday.remove(name);
-        weeklyConsumption--;
-        EventLog.getInstance().logEvent(new Event("Removed from Monday: " + name));
-    }
-
-    public HashMap<String, Pill> getMonday() {
-        return monday;
-    }
-
-    //TUESDAY METHODS
-
-    // MODIFIES: this
-    // EFFECTS: Creates a new pill with given name and adds it to Tuesday
-    public void addTuesday(String name) {
-        Pill myPill = new Pill(name);
-        tuesday.put(name, myPill);
-        weeklyConsumption++;
-        EventLog.getInstance().logEvent(new Event("Added to Tuesday: " + name));
-    }
-
-    // REQUIRES: hashmap should not be empty when called
-    // MODIFIES: this
-    // EFFECTS: Removes a pill with given name from Tuesday
-    public void removeTuesday(String name) {
-        tuesday.remove(name);
-        weeklyConsumption--;
-        EventLog.getInstance().logEvent(new Event("Removed from Tuesday: " + name));
-    }
-
-    public HashMap<String, Pill> getTuesday() {
-        return tuesday;
-    }
-
-    //WEDNESDAY METHODS
-
-    // MODIFIES: this
-    // EFFECTS: Creates a new pill with given name and adds it to Wednesday
-    public void addWednesday(String name) {
-        Pill myPill = new Pill(name);
-        wednesday.put(name, myPill);
-        weeklyConsumption++;
-        EventLog.getInstance().logEvent(new Event("Added to Wednesday: " + name));
-    }
-
-    // REQUIRES: hashmap should not be empty when called
-    // MODIFIES: this
-    // EFFECTS: Removes a pill with given name from Wednesday
-    public void removeWednesday(String name) {
-        wednesday.remove(name);
-        weeklyConsumption--;
-        EventLog.getInstance().logEvent(new Event("Removed from Wednesday: " + name));
-    }
-
-    public HashMap<String, Pill> getWednesday() {
-        return wednesday;
-    }
-
-    //THURSDAY METHODS
-
-    // MODIFIES: this
-    // EFFECTS: Creates a new pill with given name and adds it to Thursday
-    public void addThursday(String name) {
-        Pill myPill = new Pill(name);
-        thursday.put(name, myPill);
-        weeklyConsumption++;
-        EventLog.getInstance().logEvent(new Event("Added to Thursday: " + name));
-    }
-
-    // REQUIRES: hashmap should not be empty when called
-    // MODIFIES: this
-    // EFFECTS: Removes a pill with given name from Thursday
-    public void removeThursday(String name) {
-        thursday.remove(name);
-        weeklyConsumption--;
-        EventLog.getInstance().logEvent(new Event("Removed from Thursday: " + name));
-    }
-
-    public HashMap<String, Pill> getThursday() {
-        return thursday;
-    }
-
-    //FRIDAY METHODS
-
-    // MODIFIES: this
-    // EFFECTS: Creates a new pill with given name and adds it to Friday
-    public void addFriday(String name) {
-        Pill myPill = new Pill(name);
-        friday.put(name, myPill);
-        weeklyConsumption++;
-        EventLog.getInstance().logEvent(new Event("Added to Friday: " + name));
-    }
-
-    // REQUIRES: hashmap should not be empty when called
-    // MODIFIES: this
-    // EFFECTS: Removes a pill with given name from Friday
-    public void removeFriday(String name) {
-        friday.remove(name);
-        weeklyConsumption--;
-        EventLog.getInstance().logEvent(new Event("Removed from Friday: " + name));
-    }
-
-    public HashMap<String, Pill> getFriday() {
-        return friday;
-    }
-
-    //SATURDAY METHODS
-
-    // MODIFIES: this
-    // EFFECTS: Creates a new pill with given name and adds it to Saturday
-    public void addSaturday(String name) {
-        Pill myPill = new Pill(name);
-        saturday.put(name, myPill);
-        weeklyConsumption++;
-        EventLog.getInstance().logEvent(new Event("Added to Saturday: " + name));
-    }
-
-    // REQUIRES: hashmap should not be empty when called
-    // MODIFIES: this
-    // EFFECTS: Removes a pill with given name from Saturday
-    public void removeSaturday(String name) {
-        saturday.remove(name);
-        weeklyConsumption--;
-        EventLog.getInstance().logEvent(new Event("Removed from Saturday: " + name));
-    }
-
-    public HashMap<String, Pill> getSaturday() {
-        return saturday;
+        EventLog.getInstance().logEvent(new Event("Removed from " + day.getName() + ": " + name));
     }
 
     // MODIFIES: this
@@ -236,6 +81,34 @@ public class Week {
         return result;
     }
 
+    public Day getSunday() {
+        return sunday;
+    }
+
+    public Day getMonday() {
+        return monday;
+    }
+
+    public Day getTuesday() {
+        return tuesday;
+    }
+
+    public Day getWednesday() {
+        return wednesday;
+    }
+
+    public Day getThursday() {
+        return thursday;
+    }
+
+    public Day getFriday() {
+        return friday;
+    }
+
+    public Day getSaturday() {
+        return saturday;
+    }
+
     public int getTargetTotal() {
         return targetTotal;
     }
@@ -255,13 +128,13 @@ public class Week {
     // EFFECTS: makes a JSONObject with keys and values for all aspects of the Week
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("sunday", pillsToJson(sunday));
-        json.put("monday", pillsToJson(monday));
-        json.put("tuesday", pillsToJson(tuesday));
-        json.put("wednesday", pillsToJson(wednesday));
-        json.put("thursday", pillsToJson(thursday));
-        json.put("friday", pillsToJson(friday));
-        json.put("saturday", pillsToJson(saturday));
+        json.put("sunday", pillsToJson(sunday.getMap()));
+        json.put("monday", pillsToJson(monday.getMap()));
+        json.put("tuesday", pillsToJson(tuesday.getMap()));
+        json.put("wednesday", pillsToJson(wednesday.getMap()));
+        json.put("thursday", pillsToJson(thursday.getMap()));
+        json.put("friday", pillsToJson(friday.getMap()));
+        json.put("saturday", pillsToJson(saturday.getMap()));
         json.put("weeklyConsumption", weeklyConsumption);
         json.put("lastWeek", lastWeek);
         json.put("targetTotal", targetTotal);

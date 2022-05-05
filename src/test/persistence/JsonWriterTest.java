@@ -34,13 +34,13 @@ public class JsonWriterTest {
             JsonReader reader = new JsonReader("./data/testWriterEmptyWeek.json");
             w = reader.read();
             assertEquals("Your Weekly Tracker", w.getName());
-            assertTrue(w.getSunday().isEmpty());
-            assertTrue(w.getMonday().isEmpty());
-            assertTrue(w.getTuesday().isEmpty());
-            assertTrue(w.getWednesday().isEmpty());
-            assertTrue(w.getThursday().isEmpty());
-            assertTrue(w.getFriday().isEmpty());
-            assertTrue(w.getSaturday().isEmpty());
+            assertTrue(w.getSunday().getMap().isEmpty());
+            assertTrue(w.getMonday().getMap().isEmpty());
+            assertTrue(w.getTuesday().getMap().isEmpty());
+            assertTrue(w.getWednesday().getMap().isEmpty());
+            assertTrue(w.getThursday().getMap().isEmpty());
+            assertTrue(w.getFriday().getMap().isEmpty());
+            assertTrue(w.getSaturday().getMap().isEmpty());
             assertEquals(0, w.getWeeklyConsumption());
             assertEquals(0, w.getLastWeek());
             assertEquals(0, w.getTargetTotal());
@@ -53,8 +53,8 @@ public class JsonWriterTest {
     void testWriterGeneralWorkroom() {
         try {
             Week w = new Week("Your Weekly Tracker");
-            w.addSunday("advil");
-            w.addWednesday("marijuana");
+            w.add(w.getSunday(),"advil");
+            w.add(w.getWednesday(),"marijuana");
             JsonWriter writer = new JsonWriter("./data/testWriterGeneralWeek.json");
             writer.open();
             writer.write(w);
@@ -63,18 +63,18 @@ public class JsonWriterTest {
             JsonReader reader = new JsonReader("./data/testWriterGeneralWeek.json");
             w = reader.read();
             assertEquals("Your Weekly Tracker", w.getName());
-            assertEquals(1, w.getSunday().size());
-            assertEquals(0, w.getMonday().size());
-            assertEquals(0, w.getTuesday().size());
-            assertEquals(1, w.getWednesday().size());
-            assertEquals(0, w.getThursday().size());
-            assertEquals(0, w.getFriday().size());
-            assertEquals(0, w.getSaturday().size());
+            assertEquals(1, w.getSunday().getMap().size());
+            assertEquals(0, w.getMonday().getMap().size());
+            assertEquals(0, w.getTuesday().getMap().size());
+            assertEquals(1, w.getWednesday().getMap().size());
+            assertEquals(0, w.getThursday().getMap().size());
+            assertEquals(0, w.getFriday().getMap().size());
+            assertEquals(0, w.getSaturday().getMap().size());
             assertEquals(2, w.getWeeklyConsumption());
             assertEquals(0, w.getLastWeek());
             assertEquals(0, w.getTargetTotal());
-            assertTrue(w.getSunday().containsKey("advil"));
-            assertTrue(w.getWednesday().containsKey("marijuana"));
+            assertTrue(w.getSunday().getMap().containsKey("advil"));
+            assertTrue(w.getWednesday().getMap().containsKey("marijuana"));
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }
