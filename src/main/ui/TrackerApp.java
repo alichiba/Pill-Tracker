@@ -324,7 +324,7 @@ public class TrackerApp {
         System.out.println("Target has been set to the indicated amount.");
     }
 
-    // TODO add doc
+    // EFFECTS: lists all items in a day for the given day
     private void view(Day day) {
         String items = "";
         HashMap<String, Pill> dayMap = day.getMap();
@@ -332,9 +332,9 @@ public class TrackerApp {
             for (Pill p : dayMap.values()) {
                 items += p.getName() + ", ";
             }
-            System.out.println("\tSunday: " + items);
+            System.out.println(day.getName() + "\t: " + items);
         } else {
-            System.out.println("\tSunday: no items");
+            System.out.println(day.getName() + "\t: no items");
         }
 
     }

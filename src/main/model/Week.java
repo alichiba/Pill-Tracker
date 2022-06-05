@@ -36,6 +36,8 @@ public class Week {
         this.name = name;
     }
 
+    // MODIFIES: this
+    // EFFECTS: add a pill with given name to given day
     public void add(Day day, String name) {
         Pill myPill = new Pill(name);
         day.getMap().put(name, myPill);
@@ -43,6 +45,8 @@ public class Week {
         EventLog.getInstance().logEvent(new Event("Added to " + day.getName() + ": " + name));
     }
 
+    // MODIFIES: this
+    // EFFECTS: removes a pill with given name to given day
     public void remove(Day day, String name) {
         day.getMap().remove(name);
         weeklyConsumption--;
@@ -148,7 +152,6 @@ public class Week {
         for (Map.Entry<String, Pill> set : weekDay.entrySet()) {
             jsonWeekDay.put(set.getValue().toJson());
         }
-
         return jsonWeekDay;
     }
 }

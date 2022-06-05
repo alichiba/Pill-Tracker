@@ -1,5 +1,6 @@
 package ui;
 
+import model.Day;
 import model.Event;
 import model.EventLog;
 import model.Week;
@@ -18,26 +19,52 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 // graphical interface for the tracker app
-// basic code sourced from https://stackoverflow.com/questions/42867271/displaying-multiple-jlist-to-jframe
+// some basic code sourced from https://stackoverflow.com/questions/42867271/displaying-multiple-jlist-to-jframe
 public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemListener, ListSelectionListener {
+    // week definitions
     private Week thisWeek;
     private static final String JSON_STORE = "./data/yourWeek.json";
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
-    private static final String[] WEEK_DAYS = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
-            "Saturday"};
-    private JList<String> sunday;
-    private DefaultListModel<String> sundayListModel;
+    // Swing components
     private JButton addButton;
     private JTextField textField;
     private JButton removeButton;
-    private JPanel sundayContainer;
     private JPanel totalsPane;
     private JTextField numField;
     private JButton targetButton;
+    // target reached icon
     private Image coolImage = Toolkit.getDefaultToolkit().getImage("data/coolpillobject.png");
     private Image newImage = coolImage.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
     private ImageIcon scaledCoolImage = new ImageIcon(newImage);
+    // JLists for weekdays
+    private JList<String> sunday;
+    private JList<String> monday;
+    private JList<String> tuesday;
+    private JList<String> wednesday;
+    private JList<String> thursday;
+    private JList<String> friday;
+    private JList<String> saturday;
+    // ListModels for weekdays
+    private DefaultListModel<String> sundayListModel;
+    private DefaultListModel<String> mondayListModel;
+    private DefaultListModel<String> tuesdayListModel;
+    private DefaultListModel<String> wednesdayListModel;
+    private DefaultListModel<String> thursdayListModel;
+    private DefaultListModel<String> fridayListModel;
+    private DefaultListModel<String> saturdayListModel;
+    // JPanel containers for weekdays
+    private JPanel mondayContainer;
+    private JPanel tuesdayContainer;
+    private JPanel wednesdayContainer;
+    private JPanel thursdayContainer;
+    private JPanel fridayContainer;
+    private JPanel saturdayContainer;
+    private JPanel sundayContainer;
+    // selected day definitions
+    private DefaultListModel<String> selectedListModel;
+    private JList<String> selectedList;
+    private Day selectedDay;
 
     // EFFECTS: constructor for the graphical tracker app/frame
     public GraphicalTrackerApp() {
@@ -45,8 +72,9 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         startUp();
         setLayout(new GridLayout(0, 7));
         createDaysOfWeek();
-        createRemoveButton();
+        createDaySelector();
         createAddPanel();
+        createRemoveButton();
         createTargetButton();
         createTotals();
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,66 +98,72 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         }
     }
 
-
     // EFFECTS: instantiates week, json writer and reader
     private void startUp() {
         thisWeek = new Week("Your Weekly Tracker");
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
+        sundayListModel = new DefaultListModel<>();
+        mondayListModel = new DefaultListModel<>();
+        tuesdayListModel = new DefaultListModel<>();
+        wednesdayListModel = new DefaultListModel<>();
+        thursdayListModel = new DefaultListModel<>();
+        fridayListModel = new DefaultListModel<>();
+        saturdayListModel = new DefaultListModel<>();
+
+        sunday = new JList<>(sundayListModel);
+        monday = new JList<>(mondayListModel);
+        tuesday = new JList<>(tuesdayListModel);
+        wednesday = new JList<>(wednesdayListModel);
+        thursday = new JList<>(thursdayListModel);
+        friday = new JList<>(fridayListModel);
+        saturday = new JList<>(saturdayListModel);
+
+        // Default selected day is Sunday as it is at the top of the list
+        selectedListModel = sundayListModel;
+        selectedList = sunday;
+        selectedDay = thisWeek.getSunday();
     }
 
     // MODIFIES: this
     // EFFECTS: creates weekday components
     private void createDaysOfWeek() {
-//        for (int i = 0; i < WEEK_DAYS.length; i++) {
-//            // new model for each week
-//            DefaultListModel<String> listModel = new DefaultListModel<>();
-//            thisWeek.addSunday("pill1");
-//            thisWeek.addSunday("pill2");
-//            for (String s : thisWeek.getSunday().keySet()) {
-//                // fill the model with elements of Sunday!!!
-//                listModel.addElement(s);
-//            }
-//            // new list for each day of the week with model
-//            JList<String> list = new JList<>(listModel);
-//            list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//            list.setVisibleRowCount(4);
-//            JScrollPane scrollPane = new JScrollPane(list);
-//            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-//
-//            // border around showing the day of the week
-//            JPanel container = new JPanel(new BorderLayout());
-//            container.add(scrollPane);
-//            container.setBorder(BorderFactory.createTitledBorder(WEEK_DAYS[i]));
-//            add(container);
-//        }
-        for (int i = 0; i < WEEK_DAYS.length; i++) {
-            createSunday();
-        }
+        createDay(thisWeek.getSunday(), sunday, sundayListModel, sundayContainer);
+        createDay(thisWeek.getMonday(), monday, mondayListModel, mondayContainer);
+        createDay(thisWeek.getTuesday(), tuesday, tuesdayListModel, tuesdayContainer);
+        createDay(thisWeek.getWednesday(), wednesday, wednesdayListModel, wednesdayContainer);
+        createDay(thisWeek.getThursday(), thursday, thursdayListModel, thursdayContainer);
+        createDay(thisWeek.getFriday(), friday, fridayListModel, fridayContainer);
+        createDay(thisWeek.getSaturday(), saturday, saturdayListModel, saturdayContainer);
     }
 
     // MODIFIES: this
     // EFFECTS: creates a list panel for Sunday
-    private void createSunday() {
-        sundayListModel = new DefaultListModel<>();
-        for (String s : thisWeek.getSunday().keySet()) {
-            // fill the model with elements of Sunday
-            sundayListModel.addElement(s);
-        }
-        // new sunday for each day of the week with model
-        sunday = new JList<>(sundayListModel);
-        sunday.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        sunday.setSelectedIndex(0);
-        sunday.addListSelectionListener(this);
-        sunday.setVisibleRowCount(4);
-        JScrollPane scrollPane = new JScrollPane(sunday);
+    private void createDay(Day d, JList<String> day, DefaultListModel<String> listModel, JPanel container) {
+        createListModel(d, listModel);
+
+        // set given list of day to listModel and configure
+        day = new JList<>(listModel);
+        day.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        day.setSelectedIndex(0);
+        day.addListSelectionListener(this);
+        day.setVisibleRowCount(4);
+        JScrollPane scrollPane = new JScrollPane(day);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         // border around showing the day of the week
-        sundayContainer = new JPanel(new BorderLayout());
-        sundayContainer.add(scrollPane);
-        sundayContainer.setBorder(BorderFactory.createTitledBorder("Sunday"));
-        add(sundayContainer);
+        container = new JPanel(new BorderLayout());
+        container.add(scrollPane);
+        container.setBorder(BorderFactory.createTitledBorder(d.getName().toUpperCase()));
+        add(container);
+    }
+
+
+    // EFFECTS: fill the model with elements of Sunday
+    public void createListModel(Day d, DefaultListModel<String> listModel) {
+        for (String s : d.getMap().keySet()) {
+            listModel.addElement(s);
+        }
     }
 
     // MODIFIES: this
@@ -196,6 +230,60 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         add(buttonPane);
     }
 
+    // EFFECTS: creates panel that selects which day to add and remove from
+    public void createDaySelector() {
+        JPanel daySelector = new JPanel();
+        String[] weekDays = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+                "Saturday"};
+
+        // create drop down menu
+        final JComboBox comboBox = new JComboBox(weekDays);
+        comboBox.setSelectedIndex(0);
+        comboBox.addActionListener(e -> {
+            String newMode = (String)comboBox.getSelectedItem();
+            switch (newMode) {
+                case "Sunday":
+                    selectedListModel = sundayListModel;
+                    selectedList = sunday;
+                    selectedDay = thisWeek.getSunday();
+                    break;
+                case "Monday":
+                    selectedListModel = mondayListModel;
+                    selectedList = monday;
+                    selectedDay = thisWeek.getMonday();
+                    break;
+                case "Tuesday":
+                    selectedListModel = tuesdayListModel;
+                    selectedList = tuesday;
+                    selectedDay = thisWeek.getTuesday();
+                    break;
+                case "Wednesday":
+                    selectedListModel = wednesdayListModel;
+                    selectedList = wednesday;
+                    selectedDay = thisWeek.getWednesday();
+                    break;
+                case "Thursday":
+                    selectedListModel = thursdayListModel;
+                    selectedList = thursday;
+                    selectedDay = thisWeek.getThursday();
+                    break;
+                case "Friday":
+                    selectedListModel = fridayListModel;
+                    selectedList = friday;
+                    selectedDay = thisWeek.getFriday();
+                    break;
+                case "Saturday":
+                    selectedListModel = saturdayListModel;
+                    selectedList = saturday;
+                    selectedDay = thisWeek.getSaturday();
+                    break;
+            }
+        });
+        daySelector.add(new JLabel("Selected Day:"));
+        daySelector.add(comboBox);
+        add(daySelector);
+    }
+
     // class that helps add a pill to the weekday
     class AddListener implements ActionListener, DocumentListener {
 
@@ -212,25 +300,24 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
                 return;
             }
 
-            int index = sunday.getSelectedIndex(); //get selected index
-            if (index == -1) { //no selection, so insert at beginning
-                index = 0;
-            } else {           //add after the selected item
-                index++;
-            }
+            int index = selectedList.getSelectedIndex();
+                if (index == -1) { //no selection, so insert at beginning
+                    index = 0;
+                } else {           //add after the selected item
+                    index++;
+                }
 
-            thisWeek.addSunday(name);
+            thisWeek.add(selectedDay, name);
             updateTotals();
-            //If we just wanted to add to the end, we'd do this:
-            sundayListModel.addElement(textField.getText());
+            selectedListModel.addElement(textField.getText());
 
             //Reset the text field.
             textField.requestFocusInWindow();
             textField.setText("");
 
             //Select the new item and make it visible.
-            sunday.setSelectedIndex(index);
-            sunday.ensureIndexIsVisible(index);
+            selectedList.setSelectedIndex(index);
+            selectedList.ensureIndexIsVisible(index);
 
             repaint();
             revalidate();
@@ -238,42 +325,27 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
 
         // EFFECTS: checks if the string already exists in Sunday
         protected boolean alreadyInList(String name) {
-            return sundayListModel.contains(name);
+            return selectedListModel.contains(name);
         }
 
-        /**
-         * Gives notification that there was an insert into the document.  The
-         * range given by the DocumentEvent bounds the freshly inserted region.
-         *
-         * @param e the document event
-         */
+        // EFFECTS: [required implementation]
+        // Javadoc: Gives notification that there was an insert into the document.
+        // The range given by the DocumentEvent bounds the freshly inserted region.
         @Override
-        public void insertUpdate(DocumentEvent e) {
+        public void insertUpdate(DocumentEvent e) {}
 
-        }
-
-        /**
-         * Gives notification that a portion of the document has been
-         * removed.  The range is given in terms of what the view last
-         * saw (that is, before updating sticky positions).
-         *
-         * @param e the document event
-         */
+        // EFFECTS: [required implementation]
+        // Javadoc: Gives notification that a portion of the document has been removed.
+        // The range is given in terms of what the view last saw (that is, before updating sticky positions).
         @Override
-        public void removeUpdate(DocumentEvent e) {
+        public void removeUpdate(DocumentEvent e) {}
 
-        }
-
-        /**
-         * Gives notification that an attribute or set of attributes changed.
-         *
-         * @param e the document event
-         */
+        // EFFECTS: [required implementation]
+        // Javadoc: Gives notification that an attribute or set of attributes changed.
         @Override
-        public void changedUpdate(DocumentEvent e) {
-
-        }
+        public void changedUpdate(DocumentEvent e) {}
     }
+
 
     // class that helps remove a pill from the weekday
     class RemoveListener implements ActionListener {
@@ -281,19 +353,19 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         // MODIFIES: this
         // EFFECTS: removes the selected item from sunday and updates the panes
         public void actionPerformed(ActionEvent e) {
-            int index = sunday.getSelectedIndex();
-            String name = sundayListModel.getElementAt(index);
-            thisWeek.removeSunday(name);
-            sundayListModel.remove(index);
+            int index = selectedList.getSelectedIndex();
+            String name = selectedListModel.getElementAt(index);
+            thisWeek.remove(selectedDay, name);
+            selectedListModel.remove(index);
             updateTotals();
 
-            if (index == sundayListModel.getSize()) {
+            if (index == selectedListModel.getSize()) {
                 //removed item in last position
                 index--;
             }
 
-            sunday.setSelectedIndex(index);
-            sunday.ensureIndexIsVisible(index);
+            selectedList.setSelectedIndex(index);
+            selectedList.ensureIndexIsVisible(index);
 
             repaint();
             revalidate();
@@ -342,15 +414,11 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
         }
     }
 
-    /**
-     * Invoked when an item has been selected or deselected by the user.
-     * The code written for this method performs the operations
-     * that need to occur when an item is selected (or deselected).
-     */
+    // EFFECTS: [required implementation]
+    // Javadoc: Invoked when an item has been selected or deselected by the user.
+    // The code written for this method performs the operations that need to occur when an item is selected (or deselected)
     @Override
-    public void itemStateChanged(ItemEvent e) {
-
-    }
+    public void itemStateChanged(ItemEvent e) {}
 
     // MODIFIES: this
     // EFFECTS: saves the week to destination file
@@ -371,10 +439,20 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
             thisWeek = jsonReader.read();
 
             sundayListModel.clear();
-            for (String s : thisWeek.getSunday().keySet()) {
-                // fill the model with elements of Sunday!!!
-                sundayListModel.addElement(s);
-            }
+            mondayListModel.clear();
+            tuesdayListModel.clear();
+            wednesdayListModel.clear();
+            thursdayListModel.clear();
+            fridayListModel.clear();
+            saturdayListModel.clear();
+
+            createListModel(thisWeek.getSunday(), sundayListModel);
+            createListModel(thisWeek.getMonday(), mondayListModel);
+            createListModel(thisWeek.getTuesday(), tuesdayListModel);
+            createListModel(thisWeek.getWednesday(), wednesdayListModel);
+            createListModel(thisWeek.getThursday(), thursdayListModel);
+            createListModel(thisWeek.getFriday(), fridayListModel);
+            createListModel(thisWeek.getSaturday(), saturdayListModel);
 
             updateTotals();
 
@@ -384,6 +462,8 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
             JOptionPane.showMessageDialog(null, "Error: Unable to read from file");
         }
     }
+
+
 
     // MODIFIES: this
     // EFFECTS: displays menu to set target total and sets input as the target
@@ -424,45 +504,32 @@ public class GraphicalTrackerApp extends JFrame implements ActionListener, ItemL
             revalidate();
         }
 
-        /**
-         * Gives notification that there was an insert into the document.  The
-         * range given by the DocumentEvent bounds the freshly inserted region.
-         *
-         * @param e the document event
-         */
+        // EFFECTS: [required implementation]
+        // Javadoc: Gives notification that there was an insert into the document.
+        // The range given by the DocumentEvent bounds the freshly inserted region.
         @Override
         public void insertUpdate(DocumentEvent e) {
 
         }
 
-        /**
-         * Gives notification that a portion of the document has been
-         * removed.  The range is given in terms of what the view last
-         * saw (that is, before updating sticky positions).
-         *
-         * @param e the document event
-         */
+        // EFFECTS: [required implementation]
+        // Javadoc: Gives notification that a portion of the document has been removed.
+        // The range is given in terms of what the view last saw (that is, before updating sticky positions).
         @Override
         public void removeUpdate(DocumentEvent e) {
 
         }
 
-        /**
-         * Gives notification that an attribute or set of attributes changed.
-         *
-         * @param e the document event
-         */
+        // EFFECTS: [required implementation]
+        // Javadoc: Gives notification that an attribute or set of attributes changed.
         @Override
         public void changedUpdate(DocumentEvent e) {
 
         }
     }
 
-    /**
-     * Called whenever the value of the selection changes.
-     *
-     * @param e the event that characterizes the change.
-     */
+    // EFFECTS: [required implementation]
+    // Javadoc: Called whenever the value of the selection changes.
     @Override
     public void valueChanged(ListSelectionEvent e) {
 
